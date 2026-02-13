@@ -9,12 +9,13 @@
                 <div class="col-xxl-5">
                     <!-- Header text content-->
                     <div class="text-center text-xxl-start">
-                        <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">Design &middot; Development &middot; Marketing</div></div>
-                        <div class="fs-3 fw-light text-muted">I can help your business to</div>
-                        <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">Get online and grow fast</span></h1>
+                        <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">Full Stack Developer &middot; UI/UX Designer</div></div>
+                        <div class="fs-3 fw-light text-muted">I build websites that</div>
+                        <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">Make an impact</span></h1>
+                        <p class="lead text-muted mb-4">Hi, I'm Ali Mashaghi. I specialize in building modern, responsive, and user-friendly websites using the latest technologies.</p>
                         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
-                            <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/resume/">Resume</a>
-                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="/projects/">Projects</a>
+                            <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/resume/">View Resume</a>
+                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="/projects/">My Projects</a>
                         </div>
                     </div>
                 </div>
@@ -22,30 +23,113 @@
                     <!-- Header profile picture-->
                     <div class="d-flex justify-content-center mt-5 mt-xxl-0">
                         <div class="profile bg-gradient-primary-to-secondary">
-                            <img class="profile-img profile-img-1" src="{% static 'assets/profile.png' %}?v={% now 'U' %}" alt="..." />
-                            <img class="profile-img profile-img-2" src="{% static 'assets/profile 2.png' %}?v={% now 'U' %}" alt="..." />
+                            <img class="profile-img profile-img-1" src="{% static 'assets/profile.png' %}?v={% now 'U' %}" alt="Ali Mashaghi" />
+                            <img class="profile-img profile-img-2" src="{% static 'assets/profile 2.png' %}?v={% now 'U' %}" alt="Ali Mashaghi" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Services Section-->
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">What I Do</span></h2>
+                <p class="lead text-muted">I offer a wide range of services to help your business grow</p>
+            </div>
+            <div class="row gx-5">
+                <div class="col-lg-4 mb-5">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="bi bi-code-slash"></i>
+                            </div>
+                            <h3 class="h4 fw-bolder mb-2">Web Development</h3>
+                            <p class="text-muted mb-0">Custom websites built with modern technologies like Django, React, and Node.js. Fast, secure, and scalable solutions for your business.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-5">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="bi bi-palette"></i>
+                            </div>
+                            <h3 class="h4 fw-bolder mb-2">UI/UX Design</h3>
+                            <p class="text-muted mb-0">Beautiful and intuitive user interfaces that provide the best user experience. I focus on clean design and easy navigation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-5">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="bi bi-phone"></i>
+                            </div>
+                            <h3 class="h4 fw-bolder mb-2">Responsive Design</h3>
+                            <p class="text-muted mb-0">Websites that look great on all devices - from desktop computers to mobile phones. Reach your audience anywhere, anytime.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="py-5 bg-light">
+        <div class="container px-5">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">My Skills</span></h2>
+                <p class="lead text-muted">Technologies I work with</p>
+            </div>
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-8">
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Python</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Django</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">JavaScript</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">React</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">HTML/CSS</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Bootstrap</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">SQL</span>
+                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Git</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- About Section-->
-    <section class="bg-light py-5">
+    <section class="py-5">
         <div class="container px-5">
             <div class="row gx-5 justify-content-center">
                 <div class="col-xxl-8">
                     <div class="text-center my-5">
                         <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
-                        <p class="lead fw-light mb-4">My name is Start Bootstrap and I help brands grow.</p>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit dolorum itaque qui unde quisquam consequatur autem. Eveniet quasi nobis aliquid cumque officiis sed rem iure ipsa! Praesentium ratione atque dolorem?</p>
+                        <p class="lead fw-light mb-4">I'm a passionate web developer based in Iran</p>
+                        <p class="text-muted mb-4">With over 2 years of experience in web development, I specialize in creating modern and responsive websites. I love turning ideas into reality through code and design. When I'm not coding, you can find me exploring new technologies and learning new skills.</p>
+                        <p class="text-muted mb-4">I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to work together or just want to say hi!</p>
                         <div class="d-flex justify-content-center fs-2 gap-4">
-                            <a class="text-gradient" href="#!"><i class="bi bi-twitter"></i></a>
-                            <a class="text-gradient" href="#!"><i class="bi bi-linkedin"></i></a>
-                            <a class="text-gradient" href="#!"><i class="bi bi-github"></i></a>
+                            <a class="text-gradient" href="https://github.com" target="_blank"><i class="bi bi-github"></i></a>
+                            <a class="text-gradient" href="https://linkedin.com" target="_blank"><i class="bi bi-linkedin"></i></a>
+                            <a class="text-gradient" href="https://twitter.com" target="_blank"><i class="bi bi-twitter"></i></a>
+                            <a class="text-gradient" href="mailto:alimashaghi.dev@gmail.com"><i class="bi bi-envelope"></i></a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-light">
+        <div class="container px-5">
+            <div class="text-center">
+                <h2 class="display-5 fw-bolder mb-3">Let's Work Together</h2>
+                <p class="lead text-muted mb-4">Have a project in mind? I'd love to hear about it!</p>
+                <a class="btn btn-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="/contact/">Get In Touch</a>
             </div>
         </div>
     </section>

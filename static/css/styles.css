@@ -11863,3 +11863,33 @@ html {
     overflow: hidden;
   }
 }
+
+/* Custom Styles for Homepage */
+.icon-container {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #1e30f3, #e21e80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient-primary-to-secondary {
+  background: linear-gradient(45deg, #1e30f3, #e21e80);
+}
