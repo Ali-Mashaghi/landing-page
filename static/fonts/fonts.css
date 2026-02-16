@@ -1,0 +1,15 @@
+/* Plus Jakarta Sans Font */
+/* For offline use, download fonts from https://fonts.google.com/specimen/Plus+Jakarta+Sans */
+
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('PlusJakartaSans-Regular.woff2') format('woff2'),
+         url('https://fonts.gstatic.com/s/plusjakartasans/v8/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU79TR_V.woff2') format('woff2');
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
