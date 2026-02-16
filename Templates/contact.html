@@ -32,8 +32,9 @@
                             </div>
                             <!-- Phone Field -->
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="phone" name="phone" type="tel" placeholder="(123) 456-7890" />
-                                <label for="phone">Phone number (optional)</label>
+                                <input class="form-control" id="phone" name="phone" type="tel" placeholder="09123456789" required />
+                                <label for="phone">Phone number *</label>
+                                <div class="invalid-feedback" id="phoneError">A phone number is required.</div>
                             </div>
                             <!-- Message Field -->
                             <div class="form-floating mb-3">

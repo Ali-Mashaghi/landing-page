@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import Contact, Project
 
 
@@ -12,3 +13,4 @@ class ContactAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at')
     readonly_fields = ('created_at',)
+    fields = ('title', 'description', 'image', 'repo_url')
