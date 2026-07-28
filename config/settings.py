@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'storages',
     'hero.apps.HeroConfig',
 ]
 
@@ -136,6 +137,34 @@ STATICFILES_DIRS = [
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME') or os.getenv('LIARA_BUCKET_NAME')
+
+if S3_BUCKET_NAME:
+    S3_ACCESS_KEY = os.getenv('S3_ACCESS_KEY') or os.getenv('LIARA_ACCESS_KEY')
+    S3_SECRET_KEY = os.getenv('S3_SECRET_KEY') or os.getenv('LIARA_SECRET_KEY')
+    S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL') or os.getenv('LIARA_ENDPOINT')
+
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'access_key': S3_ACCESS_KEY,
+                'secret_key': S3_SECRET_KEY,
+                'bucket_name': S3_BUCKET_NAME,
+                'endpoint_url': S3_ENDPOINT_URL,
+                'region_name': os.getenv('S3_REGION_NAME', 'us-east-1'),
+                'default_acl': None,
+                'file_overwrite': False,
+                'querystring_auth': os.getenv(
+                    'S3_QUERYSTRING_AUTH',
+                    'False',
+                ).lower() in ('true', '1', 'yes'),
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
 
 
 AUTH_USER_MODEL = 'hero.User'

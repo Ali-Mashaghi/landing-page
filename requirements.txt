@@ -1,7 +1,11 @@
 Django
+boto3==1.43.57
 djangorestframework==3.16.1
+django-storages==1.14.6
 gunicorn==25.1.0
 jdatetime==5.2.0
 pillow==12.1.1
 python-dotenv==1.2.1
 psycopg[binary]
+django-storages 
+boto3

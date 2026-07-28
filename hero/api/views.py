@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from hero.models import Contact, Project, Skill, User
-from hero.services.email import send_contact_emails_parallel
+from hero.services.email import send_contact_emails
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
     ContactSerializer,
@@ -47,7 +47,20 @@ class ContactListCreateAPIView(generics.ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         contact = serializer.save()
-        send_contact_emails_parallel(contact)
+        try:
+            send_contact_emails(contact)
+        except Exception:
+            return Response(
+                {
+                    'success': False,
+                    'message': (
+                        'Your message was saved, but email delivery failed. '
+                        'Please try again later.'
+                    ),
+                    'contact_id': contact.pk,
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
         return Response(
             {
                 'success': True,

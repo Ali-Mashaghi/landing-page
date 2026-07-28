@@ -1,14 +1,19 @@
-import threading
+import logging
+import time
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage, get_connection
 
 
-def _send_admin_notification(contact):
-    try:
-        send_mail(
+logger = logging.getLogger(__name__)
+
+
+def send_contact_emails(contact, max_attempts=3):
+    """Send both contact emails through one SMTP connection, with retries."""
+    emails = [
+        EmailMessage(
             subject=f'پیام جدید فرم تماس از {contact.name}',
-            message=(
+            body=(
                 f'یک پیام جدید از طریق فرم تماس وب‌سایت دریافت شده است:\n\n'
                 f'نام: {contact.name}\n'
                 f'ایمیل: {contact.email}\n'
@@ -16,18 +21,12 @@ def _send_admin_notification(contact):
                 f'متن پیام:\n{contact.message}'
             ),
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.CONTACT_NOTIFICATION_EMAIL],
-            fail_silently=False,
-        )
-    except Exception as exc:
-        print(f'Admin notification email failed: {exc}')
-
-
-def _send_user_confirmation(contact):
-    try:
-        send_mail(
+            to=[settings.CONTACT_NOTIFICATION_EMAIL],
+            reply_to=[contact.email],
+        ),
+        EmailMessage(
             subject='پیام شما دریافت شد — علی مشاغی',
-            message=(
+            body=(
                 f'سلام {contact.name} عزیز،\n\n'
                 f'از اینکه با من تماس گرفتید، بسیار سپاسگزارم.\n'
                 f'پیام شما با موفقیت دریافت شد و در اسرع وقت پاسخ خواهم داد.\n\n'
@@ -35,17 +34,28 @@ def _send_user_confirmation(contact):
                 f'"{contact.message[:200]}{"..." if len(contact.message) > 200 else ""}"\n\n'
                 f'با احترام،\n'
                 f'علی مشاغی\n'
-                f'aliu.mashaghi@gmail.com'
+                f'{settings.DEFAULT_FROM_EMAIL}'
             ),
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[contact.email],
-            fail_silently=False,
-        )
-    except Exception as exc:
-        print(f'User confirmation email failed: {exc}')
+            to=[contact.email],
+        ),
+    ]
 
-
-def send_contact_emails_parallel(contact):
-    """Send admin notification and user confirmation emails in parallel."""
-    threading.Thread(target=_send_admin_notification, args=(contact,), daemon=True).start()
-    threading.Thread(target=_send_user_confirmation, args=(contact,), daemon=True).start()
+    for attempt in range(1, max_attempts + 1):
+        try:
+            with get_connection(fail_silently=False) as connection:
+                sent_count = connection.send_messages(emails)
+            if sent_count != len(emails):
+                raise RuntimeError(
+                    f'Expected to send {len(emails)} emails, but sent {sent_count}.'
+                )
+            return sent_count
+        except Exception:
+            logger.exception(
+                'Contact email attempt %s of %s failed.',
+                attempt,
+                max_attempts,
+            )
+            if attempt == max_attempts:
+                raise
+            time.sleep(attempt)

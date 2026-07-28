@@ -40,9 +40,12 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
             `;
             document.getElementById('contactForm').reset();
         } else {
-            let errorMessage = 'Please fix the following errors:<br>';
-            for (const [field, errors] of Object.entries(data.errors)) {
-                errorMessage += `${errors.join(', ')}<br>`;
+            let errorMessage = data.message || 'Please fix the following errors:';
+            if (data.errors) {
+                errorMessage += '<br>';
+                for (const errors of Object.values(data.errors)) {
+                    errorMessage += `${errors.join(', ')}<br>`;
+                }
             }
             alertContainer.innerHTML = `
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">

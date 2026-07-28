@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Resume - {% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}{% endblock %}
+{% block title %}Resume - {% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}{% endblock %}
 
 {% block content %}
 <section class="resume-hero d-flex align-items-center justify-content-center py-5">
@@ -17,17 +17,15 @@
             <div class="resume-glass-card d-flex flex-column align-items-center justify-content-center text-center p-4 p-md-5">
                 <div class="resume-card-panel active" data-resume-panel="profile" role="tabpanel">
                     {% if site_profile and site_profile.profile_image %}
-                    <img src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Profile{% endif %}" class="rounded-circle profile-avatar mb-3">
-                    {% else %}
-                    <div class="rounded-circle profile-avatar-placeholder mb-3">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
+                    <img src="{{ site_profile.profile_image.url }}" alt="{{ site_profile.full_name }}" class="rounded-circle profile-avatar mb-3">
                     {% endif %}
-                    <h1 class="h3 fw-bolder mb-1">{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}</h1>
-                    <p class="mb-4 opacity-75 small">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Full Stack Developer{% endif %}</p>
-                    <a class="btn resume-download-btn px-4 py-2 rounded-pill" href="{% if site_profile and site_profile.resume %}{{ site_profile.resume.url }}{% else %}{% static 'assets/Ali mashaghi Resume.pdf' %}{% endif %}" target="_blank" download>
+                    <h1 class="h3 fw-bolder mb-1">{% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}</h1>
+                    <p class="mb-4 opacity-75 small">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Lorem ipsum dolor sit amet{% endif %}</p>
+                    {% if site_profile and site_profile.resume %}
+                    <a class="btn resume-download-btn px-4 py-2 rounded-pill" href="{{ site_profile.resume.url }}" target="_blank" download>
                         <i class="bi bi-download me-2"></i>Download Resume
                     </a>
+                    {% endif %}
                 </div>
                 <div class="resume-card-panel" data-resume-panel="telegram" role="tabpanel">
                     <div class="d-flex align-items-center gap-2 mb-3">
@@ -42,7 +40,7 @@
                     {% else %}
                     <div class="telegram-empty-state">
                         <i class="bi bi-telegram display-5 mb-3"></i>
-                        <p class="small mb-0">Add your Telegram URL in Dashboard → Edit Profile.</p>
+                        <p class="small mb-0">Lorem ipsum dolor sit amet.</p>
                     </div>
                     {% endif %}
                 </div>
@@ -57,7 +55,9 @@
                 {% if site_profile and site_profile.x_url %}
                 <a href="{{ site_profile.x_url }}" target="_blank" title="X"><i class="bi bi-twitter-x"></i></a>
                 {% endif %}
-                <a href="mailto:{% if site_profile and site_profile.public_email %}{{ site_profile.public_email }}{% else %}aliu.mashaghi@gmail.com{% endif %}" title="Email"><i class="bi bi-envelope"></i></a>
+                {% if site_profile and site_profile.public_email %}
+                <a href="mailto:{{ site_profile.public_email }}" title="Email"><i class="bi bi-envelope"></i></a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -57,7 +57,7 @@ class PublicAPITests(APITestCase):
             (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN),
         )
 
-    @patch('hero.api.views.send_contact_emails_parallel')
+    @patch('hero.api.views.send_contact_emails')
     def test_contact_can_be_submitted_publicly_but_list_is_private(self, send_emails):
         payload = {
             'name': 'Visitor',
@@ -77,6 +77,24 @@ class PublicAPITests(APITestCase):
             list_response.status_code,
             (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN),
         )
+
+    @patch('hero.api.views.send_contact_emails', side_effect=OSError('SMTP unavailable'))
+    def test_contact_reports_email_delivery_failure(self, send_emails):
+        response = self.client.post(
+            reverse('contact_list_api'),
+            {
+                'name': 'Visitor',
+                'email': 'visitor@example.com',
+                'phone': '+123456789',
+                'message': 'Please contact me.',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE)
+        self.assertFalse(response.data['success'])
+        self.assertTrue(Contact.objects.filter(email='visitor@example.com').exists())
+        send_emails.assert_called_once()
 
     def test_staff_can_manage_projects_and_update_profile_skills(self):
         self.client.force_authenticate(self.admin)
@@ -158,3 +176,50 @@ class DashboardProjectTests(TestCase):
         self.assertEqual(project.title, 'Updated dashboard project')
         self.assertRedirects(delete_response, reverse('dashboard_projects'))
         self.assertFalse(Project.objects.filter(pk=project.pk).exists())
+
+
+class ProfileFallbackTests(TestCase):
+    def test_homepage_uses_lorem_and_no_profile_image_without_profile(self):
+        response = self.client.get(reverse('index'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'Lorem ipsum dolor sit amet')
+        self.assertNotContains(response, 'assets/profile.png')
+        self.assertNotContains(response, 'assets/profile 2.png')
+
+
+class UserRegistrationTests(TestCase):
+    def test_login_page_links_to_signup(self):
+        response = self.client.get(reverse('admin_login'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, reverse('signup'))
+
+    def test_visitor_can_create_account_and_is_logged_in(self):
+        response = self.client.post(reverse('signup'), {
+            'first_name': 'Test',
+            'last_name': 'User',
+            'email': 'visitor@example.com',
+            'password1': 'StrongRegistrationPassword123!',
+            'password2': 'StrongRegistrationPassword123!',
+        })
+
+        user = get_user_model().objects.get(email='visitor@example.com')
+        self.assertRedirects(response, reverse('index'))
+        self.assertFalse(user.is_staff)
+        self.assertEqual(int(self.client.session['_auth_user_id']), user.pk)
+
+    def test_regular_user_login_redirects_to_homepage(self):
+        get_user_model().objects.create_user(
+            email='member@example.com',
+            password='StrongLoginPassword123!',
+            first_name='Site',
+            last_name='Member',
+        )
+
+        response = self.client.post(reverse('admin_login'), {
+            'username': 'member@example.com',
+            'password': 'StrongLoginPassword123!',
+        })
+
+        self.assertRedirects(response, reverse('index'))

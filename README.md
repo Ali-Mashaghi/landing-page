@@ -32,6 +32,24 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## ذخیره فایل‌های آپلودی در Liara
+
+فایل‌سیستم کانتینر Liara فقط‌خواندنی و موقتی است. برای تصویر پروفایل، رزومه و
+تصاویر پروژه یک Object Storage سازگار با S3 بسازید و متغیرهای زیر را در تنظیمات
+برنامه Liara وارد کنید:
+
+```env
+S3_BUCKET_NAME=your-bucket-name
+S3_ACCESS_KEY=your-access-key
+S3_SECRET_KEY=your-secret-key
+S3_ENDPOINT_URL=https://your-s3-endpoint
+S3_REGION_NAME=us-east-1
+S3_QUERYSTRING_AUTH=False
+```
+
+برای نمایش عمومی تصاویر، دسترسی خواندن Bucket را عمومی کنید. در صورت خصوصی بودن
+Bucket، مقدار `S3_QUERYSTRING_AUTH` را روی `True` قرار دهید.
+
 ## ساختار پروژه
 
 ```

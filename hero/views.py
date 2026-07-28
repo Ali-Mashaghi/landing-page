@@ -3,12 +3,13 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from functools import wraps
 
 from .models import Project, Contact
-from .forms import ContactForm, LoginForm, ProfileForm, ProjectForm
-from .services.email import send_contact_emails_parallel
+from .forms import ContactForm, LoginForm, ProfileForm, ProjectForm, SignupForm
+from .services.email import send_contact_emails
 
 
 def staff_required(view_func):
@@ -37,8 +38,15 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             contact_message = form.save()
-            send_contact_emails_parallel(contact_message)
-            messages.success(request, 'Your message has been sent successfully.')
+            try:
+                send_contact_emails(contact_message)
+            except Exception:
+                messages.warning(
+                    request,
+                    'Your message was saved, but email delivery failed. Please try again later.',
+                )
+            else:
+                messages.success(request, 'Your message has been sent successfully.')
             return redirect('contact')
     else:
         form = ContactForm()
@@ -50,17 +58,41 @@ def resume(request):
 
 
 def admin_login(request):
-    if request.user.is_authenticated and request.user.is_staff:
-        return redirect('dashboard')
+    if request.user.is_authenticated:
+        return redirect('dashboard' if request.user.is_staff else 'index')
 
     form = LoginForm(request, data=request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        login(request, form.get_user())
+        user = form.get_user()
+        login(request, user)
         messages.success(request, 'Welcome back!')
-        next_url = request.GET.get('next', 'dashboard')
-        return redirect(next_url)
+        next_url = request.POST.get('next') or request.GET.get('next')
+        if next_url and url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(next_url)
+        return redirect('dashboard' if user.is_staff else 'index')
 
     return render(request, 'dashboard/login.html', {'form': form})
+
+
+def signup(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard' if request.user.is_staff else 'index')
+
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Your account was created successfully.')
+            return redirect('index')
+    else:
+        form = SignupForm()
+
+    return render(request, 'dashboard/signup.html', {'form': form})
 
 
 @require_POST
