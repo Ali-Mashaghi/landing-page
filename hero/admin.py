@@ -1,7 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import Contact, Project, User
+from .models import Contact, Project, User, Skill
+
+
+class SkillInline(admin.TabularInline):
+    model = Skill
+    extra = 1
+    fields = ('name', 'order')
 
 
 @admin.register(Contact)
@@ -32,7 +38,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': (
                 'first_name', 'last_name', 'bio', 'title', 'tagline',
                 'location', 'public_email', 'profile_image', 'resume',
-                'github_url', 'linkedin_url', 'twitter_url',
+                'github_url', 'linkedin_url', 'x_url', 'telegram_url',
             ),
         }),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
@@ -47,3 +53,11 @@ class UserAdmin(BaseUserAdmin):
     )
 
     readonly_fields = ('created_date', 'updated_date', 'last_login')
+    inlines = [SkillInline]
+
+
+@admin.register(Skill)
+class SkillAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'order')
+    list_filter = ('user',)
+    search_fields = ('name', 'user__email')

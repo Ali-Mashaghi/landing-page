@@ -1,6 +1,13 @@
 document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
+    if (!this.checkValidity()) {
+        this.classList.add('was-validated');
+        return;
+    }
+
+    this.classList.remove('was-validated');
+
     const formData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
@@ -10,7 +17,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
 
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Sending...';
 
     fetch('/api/contact/', {
         method: 'POST',
@@ -56,7 +63,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
     })
     .finally(() => {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
+        submitBtn.innerHTML = 'Send Message <i class="bi bi-arrow-right ms-2"></i>';
     });
 });
 

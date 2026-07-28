@@ -3,29 +3,28 @@
 {% block title %}{% if site_profile %}{{ site_profile.full_name }} - Home{% else %}Ali Mashaghi - Home{% endif %}{% endblock %}
 {% block content %}
     <!-- Header-->
-    <header class="py-5">
+    <header class="py-5 home-hero">
         <div class="container px-5 pb-5">
             <div class="row gx-5 align-items-center">
                 <div class="col-xxl-5">
                     <!-- Header text content-->
-                    <div class="text-center text-xxl-start">
-                        <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Full Stack Developer &middot; UI/UX Designer{% endif %}</div></div>
+                    <div class="text-center text-xxl-start hero-copy">
+                        <div class="eyebrow"><i class="bi bi-stars"></i>{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Full Stack Developer &middot; UI/UX Designer{% endif %}</div>
                         <div class="fs-3 fw-light text-muted">{% if site_profile and site_profile.tagline %}{{ site_profile.tagline }}{% else %}I build websites that{% endif %}</div>
                         <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">Make an impact</span></h1>
                         <p class="lead text-muted mb-4">Hi, I'm {% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}. {% if site_profile and site_profile.bio %}{{ site_profile.bio }}{% else %}I specialize in building modern, responsive, and user-friendly websites using the latest technologies.{% endif %}</p>
                         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
                             <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/resume/">View Resume</a>
-                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="/projects/">My Projects</a>
+                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="/projects/">My Projects <i class="bi bi-arrow-up-right ms-2"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-xxl-7">
                     <!-- Header profile picture-->
                     <div class="d-flex justify-content-center mt-5 mt-xxl-0">
-                        <div class="profile bg-gradient-primary-to-secondary">
+                        <div class="profile bg-gradient-primary-to-secondary{% if site_profile and site_profile.profile_image %} profile-single{% endif %}">
                             {% if site_profile and site_profile.profile_image %}
-                            <img class="profile-img profile-img-1" src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}" />
-                            <img class="profile-img profile-img-2" src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}" />
+                            <img class="profile-img profile-img-single" src="{{ site_profile.profile_image.url }}" alt="{{ site_profile.full_name }}" />
                             {% else %}
                             <img class="profile-img profile-img-1" src="{% static 'assets/profile.png' %}?v={% now 'U' %}" alt="Ali Mashaghi" />
                             <img class="profile-img profile-img-2" src="{% static 'assets/profile 2.png' %}?v={% now 'U' %}" alt="Ali Mashaghi" />
@@ -38,45 +37,51 @@
     </header>
 
     <!-- Services Section-->
-    <section class="py-5">
+    <section class="py-5 services-glass-section">
         <div class="container px-5">
-            <div class="text-center mb-5">
-                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">What I Do</span></h2>
-                <p class="lead text-muted">I offer a wide range of services to help your business grow</p>
+            <div class="text-center mb-5 position-relative">
+                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">How I Grow Your Business</span></h2>
+                <p class="lead text-muted">Digital solutions focused on trust, conversion, and sustainable growth</p>
             </div>
-            <div class="row gx-5">
+            <div class="row g-4 position-relative">
                 <div class="col-lg-4 mb-5">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
+                    <article class="service-glass-card h-100" tabindex="0">
+                        <span class="service-number">01</span>
+                        <div class="card-body p-4 p-xl-5">
                             <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
                                 <i class="bi bi-code-slash"></i>
                             </div>
-                            <h3 class="h4 fw-bolder mb-2">Web Development</h3>
-                            <p class="text-muted mb-0">Custom websites built with modern technologies like Django, React, and Node.js. Fast, secure, and scalable solutions for your business.</p>
+                            <h3 class="h4 fw-bolder mb-2">Turn Visitors Into Customers</h3>
+                            <p class="text-muted mb-4">I create clear, conversion-focused websites that guide visitors toward taking action—helping you generate more leads and increase sales.</p>
+                            <span class="service-arrow">Increase conversions <i class="bi bi-arrow-up-right"></i></span>
                         </div>
-                    </div>
+                    </article>
                 </div>
                 <div class="col-lg-4 mb-5">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
+                    <article class="service-glass-card h-100" tabindex="0">
+                        <span class="service-number">02</span>
+                        <div class="card-body p-4 p-xl-5">
                             <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
                                 <i class="bi bi-palette"></i>
                             </div>
-                            <h3 class="h4 fw-bolder mb-2">UI/UX Design</h3>
-                            <p class="text-muted mb-0">Beautiful and intuitive user interfaces that provide the best user experience. I focus on clean design and easy navigation.</p>
+                            <h3 class="h4 fw-bolder mb-2">Build Trust In Your Brand</h3>
+                            <p class="text-muted mb-4">A polished and intuitive experience makes your business look credible, keeps customers engaged, and gives them confidence to choose you.</p>
+                            <span class="service-arrow">Strengthen your brand <i class="bi bi-arrow-up-right"></i></span>
                         </div>
-                    </div>
+                    </article>
                 </div>
                 <div class="col-lg-4 mb-5">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
+                    <article class="service-glass-card h-100" tabindex="0">
+                        <span class="service-number">03</span>
+                        <div class="card-body p-4 p-xl-5">
                             <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
                                 <i class="bi bi-phone"></i>
                             </div>
-                            <h3 class="h4 fw-bolder mb-2">Responsive Design</h3>
-                            <p class="text-muted mb-0">Websites that look great on all devices - from desktop computers to mobile phones. Reach your audience anywhere, anytime.</p>
+                            <h3 class="h4 fw-bolder mb-2">Reach More Customers</h3>
+                            <p class="text-muted mb-4">Fast, responsive, and accessible experiences help customers find and use your website easily on any device—wherever they are.</p>
+                            <span class="service-arrow">Expand your reach <i class="bi bi-arrow-up-right"></i></span>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </div>
         </div>
@@ -91,15 +96,19 @@
             </div>
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-8">
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Python</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Django</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">HTML/CSS</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Bootstrap</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">SQL</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Git</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Adobe after effects</span>
-                        <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Adobe premiere pro</span>
+                    <div class="d-flex flex-wrap justify-content-center gap-3 skills-cloud">
+                        {% if site_profile and site_profile.skills.exists %}
+                            {% for skill in site_profile.skills.all %}
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">{{ skill.name }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Python</span>
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Django</span>
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">HTML/CSS</span>
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Bootstrap</span>
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">SQL</span>
+                            <span class="badge bg-primary bg-gradient fs-6 py-2 px-4">Git</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -111,10 +120,10 @@
         <div class="container px-5">
             <div class="row gx-5 justify-content-center">
                 <div class="col-xxl-8">
-                    <div class="text-center my-5">
+                    <div class="text-center my-5 glass-panel p-4 p-md-5">
                         <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
                         <p class="lead fw-light mb-4">{% if site_profile and site_profile.location %}I'm a passionate web developer based in {{ site_profile.location }}{% else %}I'm a passionate web developer based in Iran{% endif %}</p>
-                        <p class="text-muted mb-4">{% if site_profile and site_profile.bio %}{{ site_profile.bio }}{% else %}With over 2 years of experience in web development, I specialize in creating modern and responsive websites. I love turning ideas into reality through code and design. When I'm not coding, you can find me exploring new technologies and learning new skills.{% endif %}</p>
+                        <p class="text-muted mb-4">{% if site_profile and site_profile.about_me  %}{{ site_profile.about_me  }}{% else %}With over 2 years of experience in web development, I specialize in creating modern and responsive websites. I love turning ideas into reality through code and design. When I'm not coding, you can find me exploring new technologies and learning new skills.{% endif %}</p>
                         <p class="text-muted mb-4">I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to work together or just want to say hi!</p>
                         <div class="d-flex justify-content-center fs-2 gap-4">
                             {% if site_profile and site_profile.github_url %}
@@ -127,10 +136,10 @@
                             {% else %}
                             <a class="text-gradient" href="https://www.linkedin.com/in/ali-mashaghi-b8a50131b/" target="_blank"><i class="bi bi-linkedin"></i></a>
                             {% endif %}
-                            {% if site_profile and site_profile.twitter_url %}
-                            <a class="text-gradient" href="{{ site_profile.twitter_url }}" target="_blank"><i class="bi bi-twitter"></i></a>
+                            {% if site_profile and site_profile.x_url %}
+                            <a class="text-gradient" href="{{ site_profile.x_url }}" target="_blank" title="X"><i class="bi bi-twitter-x"></i></a>
                             {% else %}
-                            <a class="text-gradient" href="https://x.com/AMashaghi" target="_blank"><i class="bi bi-twitter"></i></a>
+                            <a class="text-gradient" href="https://x.com/AMashaghi" target="_blank" title="X"><i class="bi bi-twitter-x"></i></a>
                             {% endif %}
                             <a class="text-gradient" href="mailto:{% if site_profile and site_profile.public_email %}{{ site_profile.public_email }}{% else %}aliu.mashaghi@gmail.com{% endif %}"><i class="bi bi-envelope"></i></a>
                         </div>
@@ -146,8 +155,31 @@
             <div class="text-center">
                 <h2 class="display-5 fw-bolder mb-3">Let's Work Together</h2>
                 <p class="lead text-muted mb-4">Have a project in mind? I'd love to hear about it!</p>
-                <a class="btn btn-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="/contact/">Get In Touch</a>
+                <a class="btn btn-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">Get In Touch</a>
             </div>
         </div>
     </section>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.service-glass-card').forEach((card) => {
+        card.addEventListener('pointermove', (event) => {
+            const rect = card.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const rotateY = ((x / rect.width) - 0.5) * 8;
+            const rotateX = ((y / rect.height) - 0.5) * -8;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+            card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        });
+        card.addEventListener('pointerleave', () => {
+            card.style.transform = '';
+        });
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.service-glass-card').forEach((item) => item.classList.remove('is-active'));
+            card.classList.add('is-active');
+        });
+    });
+</script>
 {% endblock %}

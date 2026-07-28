@@ -7,17 +7,17 @@ from django.core.mail import send_mail
 def _send_admin_notification(contact):
     try:
         send_mail(
-            subject=f'پیام جدید از {contact.name}',
+            subject=f'پیام جدید فرم تماس از {contact.name}',
             message=(
-                f'یک پیام جدید از فرم تماس دریافت شد:\n\n'
+                f'یک پیام جدید از طریق فرم تماس وب‌سایت دریافت شده است:\n\n'
                 f'نام: {contact.name}\n'
                 f'ایمیل: {contact.email}\n'
                 f'تلفن: {contact.phone}\n\n'
-                f'پیام:\n{contact.message}'
+                f'متن پیام:\n{contact.message}'
             ),
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.CONTACT_NOTIFICATION_EMAIL],
-            fail_silently=True,
+            fail_silently=False,
         )
     except Exception as exc:
         print(f'Admin notification email failed: {exc}')
@@ -26,20 +26,20 @@ def _send_admin_notification(contact):
 def _send_user_confirmation(contact):
     try:
         send_mail(
-            subject='پیام شما دریافت شد — Ali Mashaghi',
+            subject='پیام شما دریافت شد — علی مشاغی',
             message=(
                 f'سلام {contact.name} عزیز،\n\n'
-                f'از اینکه با من تماس گرفتید بسیار سپاسگزارم.\n'
+                f'از اینکه با من تماس گرفتید، بسیار سپاسگزارم.\n'
                 f'پیام شما با موفقیت دریافت شد و در اسرع وقت پاسخ خواهم داد.\n\n'
                 f'خلاصه پیام شما:\n'
                 f'"{contact.message[:200]}{"..." if len(contact.message) > 200 else ""}"\n\n'
                 f'با احترام،\n'
-                f'Ali Mashaghi\n'
+                f'علی مشاغی\n'
                 f'aliu.mashaghi@gmail.com'
             ),
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[contact.email],
-            fail_silently=True,
+            fail_silently=False,
         )
     except Exception as exc:
         print(f'User confirmation email failed: {exc}')

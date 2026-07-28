@@ -7,7 +7,8 @@ from django.views.decorators.http import require_POST
 from functools import wraps
 
 from .models import Project, Contact
-from .forms import ContactForm, LoginForm, ProfileForm
+from .forms import ContactForm, LoginForm, ProfileForm, ProjectForm
+from .services.email import send_contact_emails_parallel
 
 
 def staff_required(view_func):
@@ -35,7 +36,8 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            form.save()
+            contact_message = form.save()
+            send_contact_emails_parallel(contact_message)
             messages.success(request, 'Your message has been sent successfully.')
             return redirect('contact')
     else:
@@ -80,11 +82,15 @@ def dashboard(request):
 
 @staff_required
 def dashboard_profile(request):
-    form = ProfileForm(request.POST or None, request.FILES or None, instance=request.user)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, 'Profile updated successfully.')
-        return redirect('dashboard_profile')
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('dashboard_profile')
+        messages.error(request, 'Please fix the errors below.')
+    else:
+        form = ProfileForm(instance=request.user)
 
     return render(request, 'dashboard/profile.html', {'form': form})
 
@@ -99,3 +105,54 @@ def dashboard_contacts(request):
 def dashboard_contact_detail(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
     return render(request, 'dashboard/contact_detail.html', {'contact': contact})
+
+
+@staff_required
+def dashboard_projects(request):
+    project_list = Project.objects.all().order_by('-created_at')
+    return render(request, 'dashboard/projects.html', {'projects': project_list})
+
+
+@staff_required
+def dashboard_project_create(request):
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Project created successfully.')
+            return redirect('dashboard_projects')
+        messages.error(request, 'Please fix the errors below.')
+    else:
+        form = ProjectForm()
+    return render(request, 'dashboard/project_form.html', {
+        'form': form,
+        'page_title': 'Add Project',
+    })
+
+
+@staff_required
+def dashboard_project_edit(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES, instance=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Project updated successfully.')
+            return redirect('dashboard_projects')
+        messages.error(request, 'Please fix the errors below.')
+    else:
+        form = ProjectForm(instance=project)
+    return render(request, 'dashboard/project_form.html', {
+        'form': form,
+        'page_title': 'Edit Project',
+        'project': project,
+    })
+
+
+@require_POST
+@staff_required
+def dashboard_project_delete(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    project.delete()
+    messages.success(request, 'Project deleted successfully.')
+    return redirect('dashboard_projects')

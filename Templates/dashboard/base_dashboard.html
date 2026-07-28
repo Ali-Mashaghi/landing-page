@@ -5,19 +5,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Admin Panel{% endblock %} — Ali Mashaghi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'fonts/fonts.css' %}" rel="stylesheet">
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    <style>
-        .dashboard-sidebar { min-height: calc(100vh - 56px); }
-        .dashboard-nav-link.active { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; font-weight: 600; }
-    </style>
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body class="dashboard-body">
+    <nav class="navbar navbar-expand-lg navbar-dark dashboard-topbar">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">Admin Panel</a>
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                <span class="brand-mark"><i class="bi bi-grid-1x2-fill"></i></span> Admin Panel
+            </a>
             <div class="d-flex align-items-center gap-3">
+                {% if request.user.profile_image %}
+                <img src="{{ request.user.profile_image.url }}" alt="{{ request.user.full_name }}" class="rounded-circle dashboard-avatar">
+                {% endif %}
                 <span class="text-white-50 small">{{ request.user.full_name|default:request.user.email }}</span>
                 <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm" target="_blank">
                     <i class="bi bi-box-arrow-up-right"></i> View Site
@@ -32,7 +34,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <aside class="col-md-3 col-lg-2 bg-white border-end dashboard-sidebar py-4">
+            <aside class="col-md-3 col-lg-2 dashboard-sidebar py-4">
                 <nav class="nav flex-column px-2">
                     <a class="nav-link dashboard-nav-link rounded mb-1 {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
                         <i class="bi bi-speedometer2 me-2"></i> Dashboard
@@ -40,15 +42,15 @@
                     <a class="nav-link dashboard-nav-link rounded mb-1 {% if request.resolver_match.url_name == 'dashboard_profile' %}active{% endif %}" href="{% url 'dashboard_profile' %}">
                         <i class="bi bi-person me-2"></i> Edit Profile
                     </a>
+                    <a class="nav-link dashboard-nav-link rounded mb-1 {% if 'dashboard_project' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard_projects' %}">
+                        <i class="bi bi-folder me-2"></i> Projects
+                    </a>
                     <a class="nav-link dashboard-nav-link rounded mb-1 {% if 'dashboard_contact' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard_contacts' %}">
                         <i class="bi bi-envelope me-2"></i> Contact Messages
                     </a>
-                    <a class="nav-link dashboard-nav-link rounded mb-1" href="/admin/" target="_blank">
-                        <i class="bi bi-gear me-2"></i> Django Admin
-                    </a>
                 </nav>
             </aside>
-            <main class="col-md-9 col-lg-10 py-4 px-4">
+            <main class="col-md-9 col-lg-10 py-4 px-4 dashboard-main">
                 {% if messages %}
                     {% for message in messages %}
                         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">

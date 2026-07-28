@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Contact, User
+from .models import Contact, Project, User, Skill
 
 
 class ContactForm(forms.ModelForm):
@@ -18,6 +18,24 @@ class ContactForm(forms.ModelForm):
             'email': 'Email Address',
             'phone': 'Phone Number',
             'message': 'Message',
+        }
+
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['title', 'description', 'image', 'repo_url']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 6}),
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/jpeg,image/png,image/webp,image/gif',
+            }),
+            'repo_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com/project',
+            }),
         }
 
 
@@ -56,6 +74,16 @@ class ProfileForm(forms.ModelForm):
             'accept': 'application/pdf,.pdf',
         }),
     )
+    skills_text = forms.CharField(
+        required=False,
+        label='Skills',
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 6,
+            'placeholder': 'Python\nDjango\nHTML/CSS',
+        }),
+        help_text='One skill per line. Shown in the My Skills section on the homepage.',
+    )
 
     class Meta:
         model = User
@@ -63,6 +91,7 @@ class ProfileForm(forms.ModelForm):
             'first_name',
             'last_name',
             'bio',
+            'about_me',
             'title',
             'tagline',
             'location',
@@ -70,21 +99,52 @@ class ProfileForm(forms.ModelForm):
             'profile_image',
             'github_url',
             'linkedin_url',
-            'twitter_url',
+            'x_url',
+            'telegram_url',
             'resume',
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'about_me': forms.Textarea(attrs={'class': 'form-control', 'rows': 6}),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'tagline': forms.TextInput(attrs={'class': 'form-control'}),
+            'tagline': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'I build websites that',
+            }),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
             'public_email': forms.EmailInput(attrs={'class': 'form-control'}),
             'github_url': forms.URLInput(attrs={'class': 'form-control'}),
             'linkedin_url': forms.URLInput(attrs={'class': 'form-control'}),
-            'twitter_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'x_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'telegram_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://t.me/username',
+            }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['skills_text'].initial = '\n'.join(
+                self.instance.skills.values_list('name', flat=True)
+            )
+
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        if commit:
+            skill_names = [
+                line.strip()
+                for line in self.cleaned_data.get('skills_text', '').splitlines()
+                if line.strip()
+            ]
+            user.skills.all().delete()
+            Skill.objects.bulk_create([
+                Skill(user=user, name=name, order=index)
+                for index, name in enumerate(skill_names)
+            ])
+        return user
 
     def clean_profile_image(self):
         image = self.cleaned_data.get('profile_image')

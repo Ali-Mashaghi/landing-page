@@ -42,15 +42,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    bio = models.TextField(max_length=500, blank=False)
-    about_me =models.TextField(max_length=500, blank=False) 
-    title = models.CharField(max_length=200, blank=False, help_text='e.g. Full Stack Developer')
+    bio = models.TextField(max_length=500, blank=True)
+    about_me = models.TextField(max_length=500, blank=True)
+    title = models.CharField(max_length=200, blank=True, help_text='e.g. Full Stack Developer')
     tagline = models.CharField(max_length=300, blank=True)
     location = models.CharField(max_length=200, blank=True)
-    github_url = models.URLField(blank=False)
-    linkedin_url = models.URLField(blank=False)
-    twitter_url = models.URLField(blank=False)
-    public_email = models.EmailField(blank=False)
+    github_url = models.URLField(blank=True)
+    linkedin_url = models.URLField(blank=True)
+    x_url = models.URLField(blank=True)
+    telegram_url = models.URLField(blank=True)
+    public_email = models.EmailField(blank=True)
     profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
     resume = models.FileField(
         upload_to='resumes/',
@@ -78,3 +79,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'.strip()
+
+
+class Skill(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
+    name = models.CharField(max_length=100)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Skill'
+        verbose_name_plural = 'Skills'
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return self.name

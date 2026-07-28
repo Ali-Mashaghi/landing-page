@@ -2,117 +2,50 @@
 {% load static %}
 {% block title %}Resume - {% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}{% endblock %}
 
-{% block extra_css %}
-<style>
-    .resume-hero {
-        min-height: 70vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #1e30f3 100%);
-        position: relative;
-        overflow: hidden;
-    }
-    .resume-hero::before,
-    .resume-hero::after {
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(60px);
-        opacity: 0.45;
-    }
-    .resume-hero::before {
-        width: 280px;
-        height: 280px;
-        background: #ff6bcb;
-        top: -60px;
-        left: -40px;
-    }
-    .resume-hero::after {
-        width: 320px;
-        height: 320px;
-        background: #43e8ff;
-        bottom: -80px;
-        right: -60px;
-    }
-    .resume-glass-card {
-        width: min(100%, 380px);
-        aspect-ratio: 1 / 1;
-        background: rgba(255, 255, 255, 0.18);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        border-radius: 2rem;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18);
-        color: #fff;
-        position: relative;
-        z-index: 1;
-    }
-    .resume-glass-card .profile-avatar {
-        width: 110px;
-        height: 110px;
-        object-fit: cover;
-        border: 3px solid rgba(255, 255, 255, 0.65);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    }
-    .resume-glass-card .profile-avatar-placeholder {
-        width: 110px;
-        height: 110px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.2);
-        border: 3px solid rgba(255, 255, 255, 0.65);
-        font-size: 3rem;
-    }
-    .resume-download-btn {
-        background: rgba(255, 255, 255, 0.92);
-        color: #1e30f3;
-        border: none;
-        font-weight: 700;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .resume-download-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-        color: #1e30f3;
-    }
-    .resume-social-links a {
-        width: 44px;
-        height: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        color: #fff;
-        font-size: 1.15rem;
-        text-decoration: none;
-        transition: transform 0.2s ease, background 0.2s ease;
-    }
-    .resume-social-links a:hover {
-        transform: translateY(-3px);
-        background: rgba(255, 255, 255, 0.35);
-        color: #fff;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 <section class="resume-hero d-flex align-items-center justify-content-center py-5">
     <div class="container px-4">
         <div class="d-flex flex-column align-items-center">
-            <div class="resume-glass-card d-flex flex-column align-items-center justify-content-center text-center p-4 p-md-5">
-                {% if site_profile and site_profile.profile_image %}
-                <img src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Profile{% endif %}" class="rounded-circle profile-avatar mb-3">
-                {% else %}
-                <div class="rounded-circle profile-avatar-placeholder mb-3">
+            <div class="resume-view-switcher" role="tablist" aria-label="Resume card views">
+                <button class="resume-view-btn active" type="button" data-resume-view="profile" role="tab" aria-selected="true" title="Profile">
                     <i class="bi bi-person-fill"></i>
+                </button>
+                <button class="resume-view-btn" type="button" data-resume-view="telegram" role="tab" aria-selected="false" title="Telegram QR Code">
+                    <i class="bi bi-qr-code"></i>
+                </button>
+            </div>
+            <div class="resume-glass-card d-flex flex-column align-items-center justify-content-center text-center p-4 p-md-5">
+                <div class="resume-card-panel active" data-resume-panel="profile" role="tabpanel">
+                    {% if site_profile and site_profile.profile_image %}
+                    <img src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Profile{% endif %}" class="rounded-circle profile-avatar mb-3">
+                    {% else %}
+                    <div class="rounded-circle profile-avatar-placeholder mb-3">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    {% endif %}
+                    <h1 class="h3 fw-bolder mb-1">{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}</h1>
+                    <p class="mb-4 opacity-75 small">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Full Stack Developer{% endif %}</p>
+                    <a class="btn resume-download-btn px-4 py-2 rounded-pill" href="{% if site_profile and site_profile.resume %}{{ site_profile.resume.url }}{% else %}{% static 'assets/Ali mashaghi Resume.pdf' %}{% endif %}" target="_blank" download>
+                        <i class="bi bi-download me-2"></i>Download Resume
+                    </a>
                 </div>
-                {% endif %}
-                <h1 class="h3 fw-bolder mb-1">{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}</h1>
-                <p class="mb-4 opacity-75 small">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Full Stack Developer{% endif %}</p>
-                <a class="btn resume-download-btn px-4 py-2 rounded-pill" href="{% if site_profile and site_profile.resume %}{{ site_profile.resume.url }}{% else %}{% static 'assets/Ali mashaghi Resume.pdf' %}{% endif %}" target="_blank" download>
-                    <i class="bi bi-download me-2"></i>Download Resume
-                </a>
+                <div class="resume-card-panel" data-resume-panel="telegram" role="tabpanel">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-telegram fs-4"></i>
+                        <h2 class="h5 fw-bold mb-0">Telegram</h2>
+                    </div>
+                    {% if site_profile and site_profile.telegram_url %}
+                    <a class="telegram-qr-frame" href="{{ site_profile.telegram_url }}" target="_blank" title="Open Telegram">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={{ site_profile.telegram_url|urlencode }}" alt="Telegram QR Code">
+                    </a>
+                    <p class="small opacity-75 mt-3 mb-0">Scan or tap to connect</p>
+                    {% else %}
+                    <div class="telegram-empty-state">
+                        <i class="bi bi-telegram display-5 mb-3"></i>
+                        <p class="small mb-0">Add your Telegram URL in Dashboard → Edit Profile.</p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             <div class="resume-social-links d-flex gap-3 mt-4">
                 {% if site_profile and site_profile.github_url %}
@@ -121,8 +54,8 @@
                 {% if site_profile and site_profile.linkedin_url %}
                 <a href="{{ site_profile.linkedin_url }}" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
                 {% endif %}
-                {% if site_profile and site_profile.twitter_url %}
-                <a href="{{ site_profile.twitter_url }}" target="_blank" title="Twitter"><i class="bi bi-twitter"></i></a>
+                {% if site_profile and site_profile.x_url %}
+                <a href="{{ site_profile.x_url }}" target="_blank" title="X"><i class="bi bi-twitter-x"></i></a>
                 {% endif %}
                 <a href="mailto:{% if site_profile and site_profile.public_email %}{{ site_profile.public_email }}{% else %}aliu.mashaghi@gmail.com{% endif %}" title="Email"><i class="bi bi-envelope"></i></a>
             </div>
@@ -130,121 +63,25 @@
     </div>
 </section>
 
-<div class="container px-5 my-5">
-    <div class="row gx-5 justify-content-center">
-        <div class="col-lg-11 col-xl-9 col-xxl-8">
-            <section>
-                <h2 class="text-primary fw-bolder mb-4">Experience</h2>
-                <div class="card shadow border-0 rounded-4 mb-5">
-                    <div class="card-body p-5">
-                        <div class="row align-items-center gx-5">
-                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                <div class="bg-light p-4 rounded-4">
-                                    <div class="text-primary fw-bolder mb-2">2025 - Present</div>
-                                    <div class="small fw-bolder">Web Developer</div>
-                                    <div class="small text-muted">Stark Industries</div>
-                                    <div class="small text-muted">Tehran</div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8"><div>Developed and maintained backend systems using Django and Django REST Framework. Built secure APIs, implemented authentication and authorization, and optimized database queries for performance and scalability.</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card shadow border-0 rounded-4 mb-5">
-                    <div class="card-body p-5">
-                        <div class="row align-items-center gx-5">
-                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                <div class="bg-light p-4 rounded-4">
-                                    <div class="text-primary fw-bolder mb-2">2022 - 2025</div>
-                                    <div class="small fw-bolder">Video Editor</div>
-                                    <div class="small text-muted">Otiner studios</div>
-                                    <div class="small text-muted">Tehran</div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8"><div>Edited and produced high-quality video content using Adobe Premiere Pro and After Effects. Focused on storytelling, pacing, color correction, and motion graphics for digital platforms.</div></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            <section>
-                <h2 class="text-secondary fw-bolder mb-4">Education</h2>
-                <div class="card shadow border-0 rounded-4 mb-5">
-                    <div class="card-body p-5">
-                        <div class="row align-items-center gx-5">
-                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                <div class="bg-light p-4 rounded-4">
-                                    <div class="text-secondary fw-bolder mb-2">2022 - 2026</div>
-                                    <div class="mb-2">
-                                        <div class="small fw-bolder">Tehran Markaz College</div>
-                                        <div class="small text-muted">Tehran</div>
-                                    </div>
-                                    <div class="fst-italic">
-                                        <div class="small text-muted">Undergraduate</div>
-                                        <div class="small text-muted">Computer Engineering</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8"><div>Computer engineering student with hands-on experience in software development, system design, and problem-solving. Strong foundation in algorithms, data structures, and modern technologies.</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card shadow border-0 rounded-4 mb-5">
-                    <div class="card-body p-5">
-                        <div class="row align-items-center gx-5">
-                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                <div class="bg-light p-4 rounded-4">
-                                    <div class="text-secondary fw-bolder mb-2">2019 - 2022</div>
-                                    <div class="mb-2">
-                                        <div class="small fw-bolder">Mandegar Alborz</div>
-                                        <div class="small text-muted">Tehran</div>
-                                    </div>
-                                    <div class="fst-italic">
-                                        <div class="small text-muted">High school</div>
-                                        <div class="small text-muted">Math and physic</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8"><div>Strong academic background in mathematics and physics, developing analytical thinking, problem-solving skills, and logical reasoning.</div></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+{% endblock %}
+{% block extra_js %}
+<script>
+    const resumeViewButtons = document.querySelectorAll('[data-resume-view]');
+    const resumePanels = document.querySelectorAll('[data-resume-panel]');
 
-            <section>
-                <div class="card shadow border-0 rounded-4 mb-5">
-                    <div class="card-body p-5">
-                        <div class="mb-5">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3"><i class="bi bi-tools"></i></div>
-                                <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Professional Skills</span></h3>
-                            </div>
-                            <div class="row row-cols-1 row-cols-md-3 mb-4">
-                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Video Editing</div></div>
-                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Statistical Analysis</div></div>
-                                <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Web Development</div></div>
-                            </div>
-                            <div class="row row-cols-1 row-cols-md-3">
-                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Graphic Design</div></div>
-                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Adobe After effects</div></div>
-                                <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Backend(Django)</div></div>
-                            </div>
-                        </div>
-                        <div class="mb-0">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3"><i class="bi bi-code-slash"></i></div>
-                                <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Languages</span></h3>
-                            </div>
-                            <div class="row row-cols-1 row-cols-md-3 mb-4">
-                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">HTML & CSS</div></div>
-                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Python</div></div>
-                                <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">SQL</div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</div>
+    resumeViewButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const view = button.dataset.resumeView;
+            resumeViewButtons.forEach((item) => {
+                const isActive = item === button;
+                item.classList.toggle('active', isActive);
+                item.setAttribute('aria-selected', String(isActive));
+            });
+            resumePanels.forEach((panel) => {
+                panel.classList.toggle('active', panel.dataset.resumePanel === view);
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -2,47 +2,70 @@
 {% load static %}
 {% block title %}Projects - Ali Mashaghi{% endblock %}
 {% block content %}
-    <!-- Projects Section-->
+    <header class="site-page-hero">
+        <div class="container px-5 position-relative text-center">
+            <span class="eyebrow"><i class="bi bi-grid-1x2-fill"></i> Selected work</span>
+            <h1 class="display-4 fw-bolder mb-3"><span class="text-gradient">Projects built for impact</span></h1>
+            <p class="lead text-muted mx-auto mb-0 page-intro">A collection of digital products focused on clear experiences, solid engineering, and measurable business value.</p>
+        </div>
+    </header>
+
     <section class="py-5">
-        <div class="container px-5 mb-5">
-            <div class="text-center mb-5">
-                <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Projects</span></h1>
-            </div>
-            <div class="row gx-5 justify-content-center">
-                <div class="col-lg-11 col-xl-9 col-xxl-8">
-                    {% load jalali_filters %}
-                    {% for project in projects %}
-                        <!-- Project Card -->
-                        <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
-                            <div class="card-body p-0">
-                                <div class="text-center p-5">
-                                    <h2 class="fw-bolder mb-4">{{ project.title }}</h2>
-                                    {% if project.image %}
-                                        <img class="img-fluid rounded mb-4" src="{{ project.image.url }}" alt="{{ project.title }}" style="max-width: 100%; height: auto;" />
-                                    {% else %}
-                                        <img class="img-fluid rounded mb-4" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." style="max-width: 100%; height: auto;" />
-                                    {% endif %}
-                                    <p>{{ project.description }}</p>
-                                    {% if project.repo_url %}
-                                        <a href="{{ project.repo_url }}" class="btn btn-sm btn-primary">View Project</a>
-                                    {% endif %}
-                                    <small class="text-muted d-block mt-3">{{ project.created_at|jalali_datetime }}</small>
-                                </div>
+        <div class="container px-5 my-4">
+            <div class="row g-5 justify-content-center">
+                {% load jalali_filters %}
+                {% for project in projects %}
+                <div class="col-lg-10">
+                    <article class="card project-modern-card border-0">
+                        <div class="row g-0 align-items-stretch">
+                            <div class="col-lg-6 project-image-wrap">
+                                {% if project.image %}
+                                <img class="project-image" src="{{ project.image.url }}" alt="{{ project.title }}" />
+                                {% else %}
+                                <div class="project-placeholder"><i class="bi bi-window-stack"></i></div>
+                                {% endif %}
                             </div>
+                            <div class="col-lg-6">
+                                <div class="p-4 p-md-5 h-100 d-flex flex-column justify-content-center">
+                                    <div class="d-flex align-items-center gap-2 text-primary small fw-bold mb-3">
+                                        <span>PROJECT</span>
+                                        <span class="opacity-25">•</span>
+                                        <span class="text-muted">{{ project.created_at|jalali_datetime }}</span>
+                                    </div>
+                                    <h2 class="display-6 fw-bolder mb-3">{{ project.title }}</h2>
+                                    <p class="text-muted lh-lg mb-4">{{ project.description }}</p>
+                                    {% if project.repo_url %}
+                                    <div>
+                                        <a href="{{ project.repo_url }}" class="btn btn-primary px-4 py-3" target="_blank" rel="noopener">
+                                            View Project <i class="bi bi-arrow-up-right ms-2"></i>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+            </div>
                         </div>
-                    {% empty %}
-                        <p class="text-center text-muted">No projects yet.</p>
-                    {% endfor %}
+                    </article>
                 </div>
+                {% empty %}
+                <div class="col-lg-8">
+                    <div class="glass-panel text-center p-5">
+                        <i class="bi bi-folder2-open display-4 text-primary"></i>
+                        <h2 class="h4 fw-bold mt-3">New projects are on the way</h2>
+                        <p class="text-muted mb-0">Check back soon to see the latest work.</p>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
-    <!-- Call to action section-->
+
     <section class="py-5 bg-gradient-primary-to-secondary text-white">
         <div class="container px-5 my-5">
             <div class="text-center">
-                <h2 class="display-4 fw-bolder mb-4">Let's build something together</h2>
-                <a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" href="/contact/">Contact me</a>
+                <span class="eyebrow bg-white text-primary">Start a project</span>
+                <h2 class="display-4 fw-bolder mb-3">Let's build something valuable</h2>
+                <p class="lead opacity-75 mb-4">Tell me about your goals and let's turn them into a focused digital experience.</p>
+                <a class="btn btn-light text-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">Let's talk <i class="bi bi-arrow-right ms-2"></i></a>
             </div>
         </div>
     </section>

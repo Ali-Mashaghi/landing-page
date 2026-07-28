@@ -10,6 +10,10 @@ urlpatterns = [
     path('dashboard/logout/', views.admin_logout, name='admin_logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/profile/', views.dashboard_profile, name='dashboard_profile'),
+    path('dashboard/projects/', views.dashboard_projects, name='dashboard_projects'),
+    path('dashboard/projects/add/', views.dashboard_project_create, name='dashboard_project_create'),
+    path('dashboard/projects/<int:pk>/edit/', views.dashboard_project_edit, name='dashboard_project_edit'),
+    path('dashboard/projects/<int:pk>/delete/', views.dashboard_project_delete, name='dashboard_project_delete'),
     path('dashboard/contacts/', views.dashboard_contacts, name='dashboard_contacts'),
     path('dashboard/contacts/<int:pk>/', views.dashboard_contact_detail, name='dashboard_contact_detail'),
 ]
