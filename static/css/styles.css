@@ -11893,3 +11893,30 @@ html {
 .bg-gradient-primary-to-secondary {
   background: linear-gradient(45deg, #1e30f3, #e21e80);
 }
+
+.nav-profile-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border: 2px solid rgba(30, 48, 243, 0.25);
+}
+
+.nav-profile-img-lg {
+  width: 88px;
+  height: 88px;
+  border-width: 3px;
+}
+
+.nav-profile-icon {
+  font-size: 2.75rem;
+  line-height: 1;
+  color: #1e30f3;
+}
+
+.nav-profile-icon-lg {
+  font-size: 5rem;
+}
+
+.nav-user-toggle::after {
+  display: none;
+}

@@ -1,0 +1,88 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <h1 class="h3 fw-bolder">Edit Profile</h1>
+    <p class="text-muted mb-0">Update the information displayed on your website.</p>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Job Title</label>
+                    {{ form.title }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Tagline</label>
+                    {{ form.tagline }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Location</label>
+                    {{ form.location }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Public Email</label>
+                    {{ form.public_email }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Bio</label>
+                    {{ form.bio }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">GitHub</label>
+                    {{ form.github_url }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">LinkedIn</label>
+                    {{ form.linkedin_url }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Twitter / X</label>
+                    {{ form.twitter_url }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ form.profile_image.label }}</label>
+                    {{ form.profile_image }}
+                    {% if form.profile_image.errors %}
+                        <div class="text-danger small mt-1">{{ form.profile_image.errors.0 }}</div>
+                    {% endif %}
+                    {% if request.user.profile_image %}
+                        <div class="mt-2">
+                            <img src="{{ request.user.profile_image.url }}" alt="Profile" class="rounded-circle" width="80" height="80" style="object-fit: cover;">
+                        </div>
+                    {% endif %}
+                    <div class="form-text">Allowed formats: JPG, PNG, WEBP, GIF</div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ form.resume.label }}</label>
+                    {{ form.resume }}
+                    {% if form.resume.errors %}
+                        <div class="text-danger small mt-1">{{ form.resume.errors.0 }}</div>
+                    {% endif %}
+                    {% if request.user.resume %}
+                        <div class="small text-muted mt-2">
+                            Current file:
+                            <a href="{{ request.user.resume.url }}" target="_blank">View Resume</a>
+                        </div>
+                    {% endif %}
+                    <div class="form-text">Only PDF files are allowed.</div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

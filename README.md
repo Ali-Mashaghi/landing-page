@@ -1,4 +1,4 @@
-# وب‌سایت شخصی علی مشاغی
+#(میتونه برای هر کسی باشه ) وب‌سایت شخصی علی مشاغی
 
 وب‌سایت شخصی و نمونه کارهای علی مشاغی، توسعه‌دهنده فول‌استک و طراح رابط کاربری.
 
@@ -6,7 +6,7 @@
 
 - **Backend:** Django 6.0
 - **Frontend:** HTML, CSS, JavaScript
-- **Database:** SQLite
+- **Database:** PostgreSQL
 - **API:** Django REST Framework
 - **Deployment:** Gunicorn
 

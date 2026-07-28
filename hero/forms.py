@@ -1,5 +1,6 @@
 from django import forms
-from .models import Contact
+from django.contrib.auth.forms import AuthenticationForm
+from .models import Contact, User
 
 
 class ContactForm(forms.ModelForm):
@@ -18,3 +19,101 @@ class ContactForm(forms.ModelForm):
             'phone': 'Phone Number',
             'message': 'Message',
         }
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'admin@example.com',
+            'autofocus': True,
+        }),
+    )
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password',
+        }),
+    )
+
+
+class ProfileForm(forms.ModelForm):
+    profile_image = forms.ImageField(
+        required=False,
+        label='Profile Photo',
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+            'accept': 'image/jpeg,image/png,image/webp,image/gif',
+        }),
+    )
+    resume = forms.FileField(
+        required=False,
+        label='Resume (PDF)',
+        widget=forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+            'accept': 'application/pdf,.pdf',
+        }),
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            'first_name',
+            'last_name',
+            'bio',
+            'title',
+            'tagline',
+            'location',
+            'public_email',
+            'profile_image',
+            'github_url',
+            'linkedin_url',
+            'twitter_url',
+            'resume',
+        ]
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'tagline': forms.TextInput(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'public_email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'github_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'linkedin_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'twitter_url': forms.URLInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_profile_image(self):
+        image = self.cleaned_data.get('profile_image')
+        if not image or getattr(image, '_committed', False):
+            return image
+
+        filename = image.name.lower()
+        allowed_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.gif')
+        if not any(filename.endswith(ext) for ext in allowed_extensions):
+            raise forms.ValidationError('Profile photo must be JPG, PNG, WEBP, or GIF.')
+
+        content_type = getattr(image, 'content_type', '')
+        if content_type and not content_type.startswith('image/'):
+            raise forms.ValidationError('Profile photo must be JPG, PNG, WEBP, or GIF.')
+
+        return image
+
+    def clean_resume(self):
+        resume = self.cleaned_data.get('resume')
+        if not resume or getattr(resume, '_committed', False):
+            return resume
+
+        filename = resume.name.lower()
+        content_type = getattr(resume, 'content_type', '')
+
+        if not filename.endswith('.pdf'):
+            raise forms.ValidationError('Resume file must be a PDF.')
+
+        if content_type and content_type not in ('application/pdf', 'application/x-pdf'):
+            raise forms.ValidationError('Resume file must be a PDF.')
+
+        return resume

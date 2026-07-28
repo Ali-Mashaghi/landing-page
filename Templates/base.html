@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>{% block title %}Ali Mashaghi{% endblock %}</title>
+        <title>{% block title %}{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}{% endblock %}</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Custom Google font-->
@@ -25,7 +25,7 @@
             <!-- Navigation-->
             <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
                 <div class="container px-5">
-                    <a class="navbar-brand" href="/"><span class="fw-bolder text-primary">Ali Mashaghi</span></a>
+                    <a class="navbar-brand" href="/"><span class="fw-bolder text-primary">{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}</span></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
@@ -33,6 +33,42 @@
                             <li class="nav-item"><a class="nav-link" href="/resume/">Resume</a></li>
                             <li class="nav-item"><a class="nav-link" href="/projects/">Projects</a></li>
                             <li class="nav-item"><a class="nav-link" href="/contact/">Contact</a></li>
+                            <li class="nav-item ms-lg-2 d-flex align-items-center">
+                                {% if user.is_authenticated and user.is_staff %}
+                                <div class="dropdown">
+                                    <a class="nav-link dropdown-toggle nav-user-toggle p-0 border-0 bg-transparent" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {% if user.profile_image %}
+                                        <img src="{{ user.profile_image.url }}" alt="{{ user.full_name }}" class="nav-profile-img rounded-circle">
+                                        {% else %}
+                                        <i class="bi bi-person-circle nav-profile-icon"></i>
+                                        {% endif %}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                                        <li class="px-3 py-2 border-bottom">
+                                            <div class="fw-bold small">{{ user.full_name }}</div>
+                                            <div class="text-muted small">{{ user.email }}</div>
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'dashboard_profile' %}"><i class="bi bi-person me-2"></i>Profile</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="post" action="{% url 'admin_logout' %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                                {% else %}
+                                <a class="nav-link p-0 d-flex align-items-center" href="{% url 'admin_login' %}" title="Login">
+                                    {% if site_profile and site_profile.profile_image %}
+                                    <img src="{{ site_profile.profile_image.url }}" alt="{{ site_profile.full_name }}" class="nav-profile-img rounded-circle">
+                                    {% else %}
+                                    <i class="bi bi-person-circle nav-profile-icon"></i>
+                                    {% endif %}
+                                </a>
+                                {% endif %}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -48,19 +84,25 @@
                 <div class="row mb-4">
                     <!-- Brand Section -->
                     <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                        <h5 class="fw-bold mb-3">Ali Mashaghi</h5>
-                        <p class="text-muted small mb-4">A passionate developer creating beautiful and functional web experiences.</p>
+                        <h5 class="fw-bold mb-3">{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}</h5>
+                        <p class="text-muted small mb-4">{% if site_profile and site_profile.bio %}{{ site_profile.bio|truncatewords:25 }}{% else %}A passionate developer creating beautiful and functional web experiences.{% endif %}</p>
                         <div class="social-links">
-                            <a href="https://github.com" class="text-white text-decoration-none me-3" title="GitHub">
+                            {% if site_profile and site_profile.github_url %}
+                            <a href="{{ site_profile.github_url }}" class="text-white text-decoration-none me-3" title="GitHub" target="_blank">
                                 <i class="bi bi-github"></i>
                             </a>
-                            <a href="https://linkedin.com" class="text-white text-decoration-none me-3" title="LinkedIn">
+                            {% endif %}
+                            {% if site_profile and site_profile.linkedin_url %}
+                            <a href="{{ site_profile.linkedin_url }}" class="text-white text-decoration-none me-3" title="LinkedIn" target="_blank">
                                 <i class="bi bi-linkedin"></i>
                             </a>
-                            <a href="https://twitter.com" class="text-white text-decoration-none me-3" title="Twitter">
+                            {% endif %}
+                            {% if site_profile and site_profile.twitter_url %}
+                            <a href="{{ site_profile.twitter_url }}" class="text-white text-decoration-none me-3" title="Twitter" target="_blank">
                                 <i class="bi bi-twitter"></i>
                             </a>
-                            <a href="mailto:your-email@example.com" class="text-white text-decoration-none" title="Email">
+                            {% endif %}
+                            <a href="mailto:{% if site_profile and site_profile.public_email %}{{ site_profile.public_email }}{% else %}aliu.mashaghi@gmail.com{% endif %}" class="text-white text-decoration-none" title="Email">
                                 <i class="bi bi-envelope"></i>
                             </a>
                         </div>
@@ -104,7 +146,7 @@
                 <!-- Bottom Section -->
                 <div class="row align-items-center justify-content-between">
                     <div class="col-auto">
-                        <small class="text-muted">&copy; {% now "Y" %} Ali Mashaghi. All rights reserved.</small>
+                        <small class="text-muted">&copy; {% now "Y" %} {% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}. All rights reserved.</small>
                     </div>
                     <div class="col-auto">
                     </div>

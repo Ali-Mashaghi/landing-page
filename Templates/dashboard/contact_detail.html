@@ -1,0 +1,36 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load jalali_filters %}
+{% block title %}Message Details{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'dashboard_contacts' %}" class="text-decoration-none">&larr; Back to list</a>
+    <h1 class="h3 fw-bolder mt-2">Message Details</h1>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="text-muted small">Name</div>
+                <div class="fw-bold">{{ contact.name }}</div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-muted small">Email</div>
+                <div><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-muted small">Phone</div>
+                <div>{{ contact.phone }}</div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-muted small">Submitted At</div>
+                <div>{{ contact.created_at|jalali_datetime }}</div>
+            </div>
+            <div class="col-12">
+                <div class="text-muted small mb-2">Message</div>
+                <div class="bg-light rounded-3 p-3">{{ contact.message|linebreaksbr }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

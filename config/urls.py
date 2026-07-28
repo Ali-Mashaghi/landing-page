@@ -19,6 +19,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.site.site_header = 'Ali Mashaghi Administration'
+admin.site.site_title = 'Admin'
+admin.site.index_title = 'Site Management'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('hero.urls')),

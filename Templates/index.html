@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Ali Mashaghi - Home{% endblock %}
+{% block title %}{% if site_profile %}{{ site_profile.full_name }} - Home{% else %}Ali Mashaghi - Home{% endif %}{% endblock %}
 {% block content %}
     <!-- Header-->
     <header class="py-5">
@@ -9,10 +9,10 @@
                 <div class="col-xxl-5">
                     <!-- Header text content-->
                     <div class="text-center text-xxl-start">
-                        <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">Full Stack Developer &middot; UI/UX Designer</div></div>
-                        <div class="fs-3 fw-light text-muted">I build websites that</div>
+                        <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Full Stack Developer &middot; UI/UX Designer{% endif %}</div></div>
+                        <div class="fs-3 fw-light text-muted">{% if site_profile and site_profile.tagline %}{{ site_profile.tagline }}{% else %}I build websites that{% endif %}</div>
                         <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">Make an impact</span></h1>
-                        <p class="lead text-muted mb-4">Hi, I'm Ali Mashaghi. I specialize in building modern, responsive, and user-friendly websites using the latest technologies.</p>
+                        <p class="lead text-muted mb-4">Hi, I'm {% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}. {% if site_profile and site_profile.bio %}{{ site_profile.bio }}{% else %}I specialize in building modern, responsive, and user-friendly websites using the latest technologies.{% endif %}</p>
                         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
                             <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/resume/">View Resume</a>
                             <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="/projects/">My Projects</a>
@@ -23,8 +23,13 @@
                     <!-- Header profile picture-->
                     <div class="d-flex justify-content-center mt-5 mt-xxl-0">
                         <div class="profile bg-gradient-primary-to-secondary">
+                            {% if site_profile and site_profile.profile_image %}
+                            <img class="profile-img profile-img-1" src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}" />
+                            <img class="profile-img profile-img-2" src="{{ site_profile.profile_image.url }}" alt="{% if site_profile %}{{ site_profile.full_name }}{% else %}Ali Mashaghi{% endif %}" />
+                            {% else %}
                             <img class="profile-img profile-img-1" src="{% static 'assets/profile.png' %}?v={% now 'U' %}" alt="Ali Mashaghi" />
                             <img class="profile-img profile-img-2" src="{% static 'assets/profile 2.png' %}?v={% now 'U' %}" alt="Ali Mashaghi" />
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -108,14 +113,26 @@
                 <div class="col-xxl-8">
                     <div class="text-center my-5">
                         <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
-                        <p class="lead fw-light mb-4">I'm a passionate web developer based in Iran</p>
-                        <p class="text-muted mb-4">With over 2 years of experience in web development, I specialize in creating modern and responsive websites. I love turning ideas into reality through code and design. When I'm not coding, you can find me exploring new technologies and learning new skills.</p>
+                        <p class="lead fw-light mb-4">{% if site_profile and site_profile.location %}I'm a passionate web developer based in {{ site_profile.location }}{% else %}I'm a passionate web developer based in Iran{% endif %}</p>
+                        <p class="text-muted mb-4">{% if site_profile and site_profile.bio %}{{ site_profile.bio }}{% else %}With over 2 years of experience in web development, I specialize in creating modern and responsive websites. I love turning ideas into reality through code and design. When I'm not coding, you can find me exploring new technologies and learning new skills.{% endif %}</p>
                         <p class="text-muted mb-4">I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to work together or just want to say hi!</p>
                         <div class="d-flex justify-content-center fs-2 gap-4">
+                            {% if site_profile and site_profile.github_url %}
+                            <a class="text-gradient" href="{{ site_profile.github_url }}" target="_blank"><i class="bi bi-github"></i></a>
+                            {% else %}
                             <a class="text-gradient" href="https://github.com/Ali-Mashaghi" target="_blank"><i class="bi bi-github"></i></a>
+                            {% endif %}
+                            {% if site_profile and site_profile.linkedin_url %}
+                            <a class="text-gradient" href="{{ site_profile.linkedin_url }}" target="_blank"><i class="bi bi-linkedin"></i></a>
+                            {% else %}
                             <a class="text-gradient" href="https://www.linkedin.com/in/ali-mashaghi-b8a50131b/" target="_blank"><i class="bi bi-linkedin"></i></a>
+                            {% endif %}
+                            {% if site_profile and site_profile.twitter_url %}
+                            <a class="text-gradient" href="{{ site_profile.twitter_url }}" target="_blank"><i class="bi bi-twitter"></i></a>
+                            {% else %}
                             <a class="text-gradient" href="https://x.com/AMashaghi" target="_blank"><i class="bi bi-twitter"></i></a>
-                            <a class="text-gradient" href="mailto:aliu.mashaghi@gmail.com"><i class="bi bi-envelope"></i></a>
+                            {% endif %}
+                            <a class="text-gradient" href="mailto:{% if site_profile and site_profile.public_email %}{{ site_profile.public_email }}{% else %}aliu.mashaghi@gmail.com{% endif %}"><i class="bi bi-envelope"></i></a>
                         </div>
                     </div>
                 </div>
