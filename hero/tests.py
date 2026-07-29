@@ -223,3 +223,36 @@ class UserRegistrationTests(TestCase):
         })
 
         self.assertRedirects(response, reverse('index'))
+
+
+class BusinessCardTests(TestCase):
+    def setUp(self):
+        self.profile = get_user_model().objects.create_superuser(
+            email='card@example.com',
+            password='StrongCardPassword123!',
+            first_name='Card',
+            last_name='Owner',
+            title='Software Engineer',
+            tagline='Building useful products',
+            location='Tehran',
+            public_email='hello@example.com',
+            github_url='https://github.com/example',
+            bio='This bio must not appear on the business card.',
+            about_me='This about text must not appear on the business card.',
+        )
+
+    def test_business_card_uses_contact_details_without_bio(self):
+        response = self.client.get(reverse('business_card'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'Card Owner')
+        self.assertContains(response, 'Software Engineer')
+        self.assertContains(response, 'hello@example.com')
+        self.assertContains(response, 'https://github.com/example')
+        self.assertNotContains(response, self.profile.bio)
+        self.assertNotContains(response, self.profile.about_me)
+
+    def test_navigation_links_to_business_card(self):
+        response = self.client.get(reverse('index'))
+
+        self.assertContains(response, reverse('business_card'))

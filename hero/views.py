@@ -57,6 +57,12 @@ def resume(request):
     return render(request, 'resume.html')
 
 
+def business_card(request):
+    return render(request, 'business_card.html', {
+        'card_url': request.build_absolute_uri(),
+    })
+
+
 def admin_login(request):
     if request.user.is_authenticated:
         return redirect('dashboard' if request.user.is_staff else 'index')

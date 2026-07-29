@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Business Card — {% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}{% endblock %}
+{% block body_class %}business-card-body d-flex flex-column min-vh-100{% endblock %}
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="{% static 'css/business-card.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<section class="bc-page">
+    <canvas class="bc-background" id="businessCardBackground" aria-hidden="true"></canvas>
+    <div class="bc-content">
+        <header class="bc-heading">
+            <span class="bc-kicker">// Digital Business Card</span>
+            <h1>Business Card</h1>
+            <p>Tap the card to flip it and use the links below to connect.</p>
+        </header>
+
+        <div class="bc-scene">
+            <div class="bc-card" id="businessCard" role="button" tabindex="0" aria-label="Flip business card">
+                <article class="bc-face bc-front">
+                    <svg class="bc-circuit" viewBox="0 0 560 320" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                        <path d="M0 80h70v45h95V92h55" stroke="#00D4FF"/>
+                        <circle cx="70" cy="80" r="3" fill="#00D4FF"/>
+                        <circle cx="165" cy="125" r="3" fill="#00D4FF"/>
+                        <path d="M560 220h-75v-55h-100v35h-55" stroke="#7B2FFF"/>
+                        <circle cx="485" cy="220" r="3" fill="#7B2FFF"/>
+                        <circle cx="385" cy="165" r="3" fill="#7B2FFF"/>
+                        <path d="M0 270h55v-32h65" stroke="#1A6EFF"/>
+                        <path d="M430 0v55h70v42" stroke="#00D4FF"/>
+                    </svg>
+
+                    <div class="bc-top">
+                        <div>
+                            <div class="bc-logo">
+                                {% if site_profile %}{{ site_profile.first_name|first }}{{ site_profile.last_name|first }}{% else %}BC{% endif %}
+                            </div>
+                            <span class="bc-logo-subtitle">Digital Card</span>
+                        </div>
+                        <div class="bc-chip" aria-hidden="true"></div>
+                    </div>
+
+                    <div class="bc-main">
+                        <div class="bc-name">{% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}</div>
+                        <div class="bc-title">
+                            {% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Professional Title{% endif %}
+                        </div>
+                        {% if site_profile and site_profile.tagline %}
+                            <div class="bc-tagline">{{ site_profile.tagline }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="bc-bottom">
+                        <div class="bc-mini-details">
+                            {% if site_profile and site_profile.public_email %}
+                            <div class="bc-mini-row">
+                                <i class="bi bi-envelope"></i>
+                                <span>{{ site_profile.public_email }}</span>
+                            </div>
+                            {% endif %}
+                            {% if site_profile and site_profile.location %}
+                            <div class="bc-mini-row">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>{{ site_profile.location }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="bc-mini-row">
+                                <i class="bi bi-globe2"></i>
+                                <span>{{ request.get_host }}</span>
+                            </div>
+                        </div>
+                        <span class="bc-flip-hint">Flip →</span>
+                    </div>
+                </article>
+
+                <article class="bc-face bc-back">
+                    <div class="bc-back-logo">
+                        {% if site_profile %}{{ site_profile.first_name|first }}{{ site_profile.last_name|first }}{% else %}BC{% endif %}
+                    </div>
+                    <div class="bc-back-tagline">
+                        {% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Digital Business Card{% endif %}
+                    </div>
+                    <div class="bc-qr">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{ card_url|urlencode }}" alt="Business card QR code">
+                    </div>
+                    <div class="bc-url">{{ request.get_host }}</div>
+                </article>
+            </div>
+        </div>
+
+        <button class="bc-flip-button" id="businessCardFlip" type="button">
+            <i class="bi bi-arrow-repeat"></i>
+            Flip Card
+        </button>
+
+        <section class="bc-details" aria-labelledby="businessCardDetails">
+            <div class="bc-details-header">
+                <span class="bc-label">// Contact</span>
+                <h2 id="businessCardDetails">Contact Details</h2>
+            </div>
+            <div class="bc-links">
+                {% if site_profile and site_profile.public_email %}
+                <a class="bc-link" href="mailto:{{ site_profile.public_email }}">
+                    <span class="bc-link-icon"><i class="bi bi-envelope"></i></span>
+                    <span class="bc-link-copy">
+                        <span class="bc-label d-block">Email</span>
+                        <span class="bc-link-value d-block">{{ site_profile.public_email }}</span>
+                    </span>
+                    <span class="bc-link-arrow">→</span>
+                </a>
+                {% endif %}
+
+                {% if site_profile and site_profile.location %}
+                <div class="bc-info">
+                    <span class="bc-link-icon"><i class="bi bi-geo-alt"></i></span>
+                    <span class="bc-link-copy">
+                        <span class="bc-label d-block">Location</span>
+                        <span class="bc-link-value d-block">{{ site_profile.location }}</span>
+                    </span>
+                </div>
+                {% endif %}
+
+                {% if site_profile and site_profile.github_url %}
+                <a class="bc-link" href="{{ site_profile.github_url }}" target="_blank" rel="noopener">
+                    <span class="bc-link-icon"><i class="bi bi-github"></i></span>
+                    <span class="bc-link-copy">
+                        <span class="bc-label d-block">GitHub</span>
+                        <span class="bc-link-value d-block">{{ site_profile.github_url }}</span>
+                    </span>
+                    <span class="bc-link-arrow">→</span>
+                </a>
+                {% endif %}
+
+                {% if site_profile and site_profile.linkedin_url %}
+                <a class="bc-link" href="{{ site_profile.linkedin_url }}" target="_blank" rel="noopener">
+                    <span class="bc-link-icon"><i class="bi bi-linkedin"></i></span>
+                    <span class="bc-link-copy">
+                        <span class="bc-label d-block">LinkedIn</span>
+                        <span class="bc-link-value d-block">{{ site_profile.linkedin_url }}</span>
+                    </span>
+                    <span class="bc-link-arrow">→</span>
+                </a>
+                {% endif %}
+
+                {% if site_profile and site_profile.x_url %}
+                <a class="bc-link" href="{{ site_profile.x_url }}" target="_blank" rel="noopener">
+                    <span class="bc-link-icon"><i class="bi bi-twitter-x"></i></span>
+                    <span class="bc-link-copy">
+                        <span class="bc-label d-block">X</span>
+                        <span class="bc-link-value d-block">{{ site_profile.x_url }}</span>
+                    </span>
+                    <span class="bc-link-arrow">→</span>
+                </a>
+                {% endif %}
+
+                {% if site_profile and site_profile.telegram_url %}
+                <a class="bc-link" href="{{ site_profile.telegram_url }}" target="_blank" rel="noopener">
+                    <span class="bc-link-icon"><i class="bi bi-telegram"></i></span>
+                    <span class="bc-link-copy">
+                        <span class="bc-label d-block">Telegram</span>
+                        <span class="bc-link-value d-block">{{ site_profile.telegram_url }}</span>
+                    </span>
+                    <span class="bc-link-arrow">→</span>
+                </a>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+</section>
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/business-card.js' %}"></script>
+{% endblock %}
