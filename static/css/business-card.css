@@ -79,11 +79,14 @@
     aspect-ratio: 1.75;
     margin: 0 auto;
     cursor: pointer;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
+    will-change: transform;
     transition: transform .8s cubic-bezier(.22, 1, .36, 1);
 }
 
 .bc-card.is-flipped {
+    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
 }
 
@@ -96,6 +99,13 @@
     border-radius: 20px;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.bc-front {
+    -webkit-transform: rotateY(0deg) translateZ(1px);
+    transform: rotateY(0deg) translateZ(1px);
 }
 
 .bc-front {
@@ -224,7 +234,8 @@
     border: 1px solid rgba(123, 47, 255, .28);
     background: linear-gradient(135deg, var(--bc-panel), var(--bc-dark));
     box-shadow: 0 40px 80px rgba(0, 0, 0, .55);
-    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg) translateZ(1px);
+    transform: rotateY(180deg) translateZ(1px);
 }
 
 .bc-back-logo {
@@ -363,6 +374,49 @@
 @keyframes bc-fade-up {
     from { opacity: 0; transform: translateY(18px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .bc-card,
+    .bc-card.is-flipped {
+        -webkit-transform: none;
+        transform: none;
+        transform-style: flat;
+    }
+
+    .bc-face {
+        -webkit-transform-style: flat;
+        transform-style: flat;
+        transition: opacity .2s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .bc-front {
+        z-index: 2;
+        opacity: 1;
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+    }
+
+    .bc-back {
+        z-index: 1;
+        opacity: 0;
+        -webkit-transform: scaleX(.05);
+        transform: scaleX(.05);
+    }
+
+    .bc-card.is-flipped .bc-front {
+        z-index: 1;
+        opacity: 0;
+        -webkit-transform: scaleX(.05);
+        transform: scaleX(.05);
+    }
+
+    .bc-card.is-flipped .bc-back {
+        z-index: 2;
+        opacity: 1;
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+    }
 }
 
 @media (max-width: 576px) {
