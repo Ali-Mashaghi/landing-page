@@ -1,5 +1,11 @@
 {
 "build": {
    "location": "germany"
-}
+},
+"disks": [
+      {
+      "name" : "uploads",
+      "mountTo": "media"
+      }
+   ]
 }
