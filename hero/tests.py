@@ -179,13 +179,48 @@ class DashboardProjectTests(TestCase):
 
 
 class ProfileFallbackTests(TestCase):
-    def test_homepage_uses_lorem_and_no_profile_image_without_profile(self):
+    def test_anonymous_homepage_uses_lorem_even_when_profile_exists(self):
+        get_user_model().objects.create_superuser(
+            email='hidden@example.com',
+            password='StrongHiddenPassword123!',
+            first_name='Hidden',
+            last_name='Profile',
+            title='Hidden title',
+        )
+
         response = self.client.get(reverse('index'))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'Lorem ipsum dolor sit amet')
+        self.assertNotContains(response, 'Hidden Profile')
+        self.assertNotContains(response, 'Hidden title')
         self.assertNotContains(response, 'assets/profile.png')
         self.assertNotContains(response, 'assets/profile 2.png')
+
+    def test_authenticated_pages_use_logged_in_users_profile(self):
+        user = get_user_model().objects.create_user(
+            email='visible@example.com',
+            password='StrongVisiblePassword123!',
+            first_name='Visible',
+            last_name='Member',
+            title='Product Designer',
+            bio='Authenticated profile biography.',
+            about_me='Authenticated about text.',
+            location='Shiraz',
+        )
+        self.client.force_login(user)
+
+        homepage = self.client.get(reverse('index'))
+        resume_page = self.client.get(reverse('resume'))
+        card_page = self.client.get(reverse('business_card'))
+
+        self.assertContains(homepage, 'Visible Member')
+        self.assertContains(homepage, 'Authenticated profile biography.')
+        self.assertContains(homepage, 'Authenticated about text.')
+        self.assertContains(resume_page, 'Visible Member')
+        self.assertContains(resume_page, 'Product Designer')
+        self.assertContains(card_page, 'Visible Member')
+        self.assertContains(card_page, 'Shiraz')
 
 
 class UserRegistrationTests(TestCase):
@@ -242,6 +277,7 @@ class BusinessCardTests(TestCase):
         )
 
     def test_business_card_uses_contact_details_without_bio(self):
+        self.client.force_login(self.profile)
         response = self.client.get(reverse('business_card'))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
