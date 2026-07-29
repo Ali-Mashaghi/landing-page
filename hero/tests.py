@@ -149,6 +149,12 @@ class DashboardProjectTests(TestCase):
         )
         self.client.force_login(self.admin)
 
+    def test_dashboard_loads_favicon(self):
+        response = self.client.get(reverse('dashboard'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'assets/favicon.ico')
+
     def test_staff_can_create_edit_and_delete_project(self):
         create_response = self.client.post(reverse('dashboard_project_create'), {
             'title': 'New dashboard project',
