@@ -1,11 +1,12 @@
 {
-"build": {
-   "location": "germany"
-},
-"disks": [
-      {
-      "name" : "uploads",
+  "platform": "django",
+  "build": {
+    "location": "germany"
+  },
+  "disks": [
+    {
+      "name": "uploads",
       "mountTo": "media"
-      }
-   ]
+    }
+  ]
 }
