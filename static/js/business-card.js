@@ -52,7 +52,7 @@
                 vx: (Math.random() - 0.5) * 0.24,
                 vy: (Math.random() - 0.5) * 0.24,
                 radius: Math.random() * 1.5 + 0.5,
-                color: Math.random() > 0.5 ? '0,212,255' : '123,47,255',
+                color: Math.random() > 0.5 ? '53,242,139' : '0,185,120',
                 phase: Math.random() * Math.PI * 2,
             });
         }
@@ -74,7 +74,7 @@
             height * 0.45,
             width * 0.65,
         );
-        glow.addColorStop(0, 'rgba(123,47,255,.09)');
+        glow.addColorStop(0, 'rgba(53,242,139,.1)');
         glow.addColorStop(1, 'rgba(0,0,0,0)');
         context.fillStyle = glow;
         context.fillRect(0, 0, width, height);

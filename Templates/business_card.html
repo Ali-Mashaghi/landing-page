@@ -4,7 +4,7 @@
 {% block body_class %}business-card-body d-flex flex-column min-vh-100{% endblock %}
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link href="{% static 'css/business-card.css' %}" rel="stylesheet">
+<link href="{% static 'css/business-card.css' %}?v=green-1" rel="stylesheet">
 {% endblock %}
 {% block content %}
 <section class="bc-page">
@@ -20,14 +20,14 @@
             <div class="bc-card" id="businessCard" role="button" tabindex="0" aria-label="Flip business card">
                 <article class="bc-face bc-front">
                     <svg class="bc-circuit" viewBox="0 0 560 320" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-                        <path d="M0 80h70v45h95V92h55" stroke="#00D4FF"/>
-                        <circle cx="70" cy="80" r="3" fill="#00D4FF"/>
-                        <circle cx="165" cy="125" r="3" fill="#00D4FF"/>
-                        <path d="M560 220h-75v-55h-100v35h-55" stroke="#7B2FFF"/>
-                        <circle cx="485" cy="220" r="3" fill="#7B2FFF"/>
-                        <circle cx="385" cy="165" r="3" fill="#7B2FFF"/>
-                        <path d="M0 270h55v-32h65" stroke="#1A6EFF"/>
-                        <path d="M430 0v55h70v42" stroke="#00D4FF"/>
+                        <path d="M0 80h70v45h95V92h55" stroke="#35F28B"/>
+                        <circle cx="70" cy="80" r="3" fill="#35F28B"/>
+                        <circle cx="165" cy="125" r="3" fill="#35F28B"/>
+                        <path d="M560 220h-75v-55h-100v35h-55" stroke="#00B978"/>
+                        <circle cx="485" cy="220" r="3" fill="#00B978"/>
+                        <circle cx="385" cy="165" r="3" fill="#00B978"/>
+                        <path d="M0 270h55v-32h65" stroke="#B8FF5F"/>
+                        <path d="M430 0v55h70v42" stroke="#35F28B"/>
                     </svg>
 
                     <div class="bc-top">
@@ -170,5 +170,5 @@
 {% endblock %}
 {% block footer %}{% endblock %}
 {% block extra_js %}
-<script src="{% static 'js/business-card.js' %}"></script>
+<script src="{% static 'js/business-card.js' %}?v=green-1"></script>
 {% endblock %}

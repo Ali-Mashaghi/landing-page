@@ -1,14 +1,13 @@
 .business-card-body {
-    --bc-navy: #050a1f;
-    --bc-dark: #0d1a3a;
-    --bc-panel: #0f1d3a;
-    --bc-cyan: #00d4ff;
-    --bc-violet: #7b2fff;
-    --bc-blue: #1a6eff;
-    --bc-green: #00e5a0;
-    --bc-white: #f0f8ff;
-    --bc-dim: rgba(240, 248, 255, .58);
-    --bc-border: rgba(0, 212, 255, .18);
+    --bc-navy: #03150e;
+    --bc-dark: #08251a;
+    --bc-panel: #0c3022;
+    --bc-primary: #35f28b;
+    --bc-secondary: #00b978;
+    --bc-accent: #b8ff5f;
+    --bc-white: #effff6;
+    --bc-dim: rgba(239, 255, 246, .62);
+    --bc-border: rgba(53, 242, 139, .2);
     background: var(--bc-navy);
 }
 
@@ -50,7 +49,7 @@
 
 .bc-kicker,
 .bc-label {
-    color: var(--bc-cyan);
+    color: var(--bc-primary);
     font-family: "Space Mono", monospace;
     font-size: .68rem;
     letter-spacing: .16em;
@@ -111,9 +110,9 @@
 .bc-front {
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid rgba(0, 212, 255, .24);
-    background: linear-gradient(135deg, var(--bc-dark), var(--bc-panel) 62%, rgba(0, 212, 255, .08));
-    box-shadow: 0 40px 80px rgba(0, 0, 0, .55), 0 0 55px rgba(0, 212, 255, .08);
+    border: 1px solid rgba(53, 242, 139, .28);
+    background: linear-gradient(135deg, var(--bc-dark), var(--bc-panel) 62%, rgba(53, 242, 139, .1));
+    box-shadow: 0 40px 80px rgba(0, 0, 0, .55), 0 0 55px rgba(53, 242, 139, .1);
 }
 
 .bc-front::after {
@@ -146,7 +145,7 @@
 
 .bc-logo,
 .bc-back-logo {
-    background: linear-gradient(90deg, var(--bc-cyan), var(--bc-violet));
+    background: linear-gradient(90deg, var(--bc-primary), var(--bc-accent));
     background-clip: text;
     color: transparent;
     font-size: clamp(1.5rem, 5vw, 2.25rem);
@@ -182,7 +181,7 @@
 }
 
 .bc-title {
-    color: var(--bc-cyan);
+    color: var(--bc-primary);
     font-family: "Space Mono", monospace;
     font-size: clamp(.55rem, 1.5vw, .75rem);
     letter-spacing: .13em;
@@ -214,11 +213,11 @@
 }
 
 .bc-mini-row i {
-    color: var(--bc-cyan);
+    color: var(--bc-primary);
 }
 
 .bc-flip-hint {
-    color: rgba(0, 212, 255, .55);
+    color: rgba(53, 242, 139, .62);
     font-family: "Space Mono", monospace;
     font-size: .58rem;
     letter-spacing: .1em;
@@ -231,7 +230,7 @@
     flex-direction: column;
     justify-content: center;
     gap: .65rem;
-    border: 1px solid rgba(123, 47, 255, .28);
+    border: 1px solid rgba(0, 185, 120, .34);
     background: linear-gradient(135deg, var(--bc-panel), var(--bc-dark));
     box-shadow: 0 40px 80px rgba(0, 0, 0, .55);
     -webkit-transform: rotateY(180deg) translateZ(1px);
@@ -253,7 +252,7 @@
 }
 
 .bc-url {
-    color: var(--bc-cyan);
+    color: var(--bc-primary);
 }
 
 .bc-qr {
@@ -278,7 +277,7 @@
     border: 1px solid var(--bc-border);
     border-radius: 999px;
     color: var(--bc-dim);
-    background: rgba(240, 248, 255, .04);
+    background: rgba(53, 242, 139, .04);
     font-family: "Space Mono", monospace;
     font-size: .7rem;
     letter-spacing: .1em;
@@ -287,9 +286,9 @@
 }
 
 .bc-flip-button:hover {
-    border-color: var(--bc-cyan);
-    color: var(--bc-cyan);
-    background: rgba(0, 212, 255, .07);
+    border-color: var(--bc-primary);
+    color: var(--bc-primary);
+    background: rgba(53, 242, 139, .08);
 }
 
 .bc-details {
@@ -302,7 +301,7 @@
     gap: .8rem;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 212, 255, .12);
+    border-bottom: 1px solid rgba(53, 242, 139, .14);
 }
 
 .bc-details-header h2 {
@@ -324,15 +323,15 @@
     border: 1px solid rgba(255, 255, 255, .07);
     border-radius: 12px;
     color: var(--bc-white);
-    background: rgba(13, 26, 58, .68);
+    background: rgba(8, 37, 26, .78);
     text-decoration: none;
     transition: .22s ease;
 }
 
 .bc-link:hover {
-    border-color: rgba(0, 212, 255, .35);
+    border-color: rgba(53, 242, 139, .4);
     color: var(--bc-white);
-    background: rgba(0, 212, 255, .06);
+    background: rgba(53, 242, 139, .08);
     transform: translateX(4px);
 }
 
@@ -342,10 +341,10 @@
     height: 38px;
     flex: 0 0 38px;
     place-items: center;
-    border: 1px solid rgba(0, 212, 255, .18);
+    border: 1px solid rgba(53, 242, 139, .22);
     border-radius: 9px;
-    color: var(--bc-cyan);
-    background: rgba(0, 212, 255, .08);
+    color: var(--bc-primary);
+    background: rgba(53, 242, 139, .1);
     font-size: 1.1rem;
 }
 
