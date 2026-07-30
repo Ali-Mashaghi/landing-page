@@ -3,11 +3,12 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
+from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from functools import wraps
 
-from .models import Project, Contact
+from .models import Project, Contact, User
 from .forms import ContactForm, LoginForm, ProfileForm, ProjectForm, SignupForm
 from .services.email import send_contact_emails
 
@@ -22,6 +23,12 @@ def staff_required(view_func):
             return redirect('index')
         return view_func(request, *args, **kwargs)
     return wrapper
+
+
+def absolute_card_url(request, user):
+    return request.build_absolute_uri(
+        reverse('business_card_public', kwargs={'token': user.card_token})
+    )
 
 
 def index(request):
@@ -57,9 +64,19 @@ def resume(request):
     return render(request, 'resume.html')
 
 
+@login_required
 def business_card(request):
     return render(request, 'business_card.html', {
-        'card_url': request.build_absolute_uri(),
+        'site_profile': request.user,
+        'card_url': absolute_card_url(request, request.user),
+    })
+
+
+def business_card_public(request, token):
+    owner = get_object_or_404(User, card_token=token, is_active=True)
+    return render(request, 'business_card.html', {
+        'site_profile': owner,
+        'card_url': absolute_card_url(request, owner),
     })
 
 
@@ -130,7 +147,22 @@ def dashboard_profile(request):
     else:
         form = ProfileForm(instance=request.user)
 
-    return render(request, 'dashboard/profile.html', {'form': form})
+    card_url = absolute_card_url(request, request.user)
+    return render(request, 'dashboard/profile.html', {
+        'form': form,
+        'card_url': card_url,
+    })
+
+
+@require_POST
+@staff_required
+def dashboard_regenerate_card_token(request):
+    request.user.regenerate_card_token()
+    messages.success(
+        request,
+        'Your business card link was regenerated. The previous QR code no longer works.',
+    )
+    return redirect('dashboard_profile')
 
 
 @staff_required

@@ -42,6 +42,7 @@ class UserAdmin(BaseUserAdmin):
             ),
         }),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        (_('Business card'), {'fields': ('card_token',)}),
         (_('Important dates'), {'fields': ('last_login', 'created_date', 'updated_date')}),
     )
 
@@ -52,7 +53,7 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
-    readonly_fields = ('created_date', 'updated_date', 'last_login')
+    readonly_fields = ('created_date', 'updated_date', 'last_login', 'card_token')
     inlines = [SkillInline]
 
 

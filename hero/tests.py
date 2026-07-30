@@ -281,6 +281,16 @@ class BusinessCardTests(TestCase):
             bio='This bio must not appear on the business card.',
             about_me='This about text must not appear on the business card.',
         )
+        self.public_card_url = reverse(
+            'business_card_public',
+            kwargs={'token': self.profile.card_token},
+        )
+
+    def test_guest_business_card_redirects_to_login(self):
+        response = self.client.get(reverse('business_card'))
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertIn(reverse('admin_login'), response.url)
 
     def test_business_card_uses_contact_details_without_bio(self):
         self.client.force_login(self.profile)
@@ -291,8 +301,53 @@ class BusinessCardTests(TestCase):
         self.assertContains(response, 'Software Engineer')
         self.assertContains(response, 'hello@example.com')
         self.assertContains(response, 'https://github.com/example')
+        self.assertContains(response, self.public_card_url)
         self.assertNotContains(response, self.profile.bio)
         self.assertNotContains(response, self.profile.about_me)
+
+    def test_public_token_card_shows_profile_without_login(self):
+        response = self.client.get(self.public_card_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'Card Owner')
+        self.assertContains(response, 'Software Engineer')
+        self.assertContains(response, 'hello@example.com')
+        self.assertContains(response, self.public_card_url)
+        self.assertNotContains(response, self.profile.bio)
+
+    def test_invalid_card_token_returns_404(self):
+        response = self.client.get(reverse(
+            'business_card_public',
+            kwargs={'token': '00000000-0000-0000-0000-000000000000'},
+        ))
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_regenerate_card_token_invalidates_old_link(self):
+        old_token = self.profile.card_token
+        self.client.force_login(self.profile)
+
+        response = self.client.post(reverse('dashboard_regenerate_card_token'))
+        self.assertRedirects(response, reverse('dashboard_profile'))
+
+        self.profile.refresh_from_db()
+        self.assertNotEqual(self.profile.card_token, old_token)
+
+        old_url = reverse('business_card_public', kwargs={'token': old_token})
+        new_url = reverse(
+            'business_card_public',
+            kwargs={'token': self.profile.card_token},
+        )
+        self.assertEqual(self.client.get(old_url).status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(self.client.get(new_url).status_code, status.HTTP_200_OK)
+
+    def test_dashboard_profile_shows_secret_card_url(self):
+        self.client.force_login(self.profile)
+        response = self.client.get(reverse('dashboard_profile'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, self.public_card_url)
+        self.assertContains(response, reverse('dashboard_regenerate_card_token'))
 
     def test_navigation_links_to_business_card(self):
         response = self.client.get(reverse('index'))

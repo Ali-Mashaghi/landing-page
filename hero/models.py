@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import FileExtensionValidator
@@ -60,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
         help_text='Only PDF files are allowed.',
     )
+    card_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -79,6 +82,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'.strip()
+
+    def regenerate_card_token(self):
+        self.card_token = uuid.uuid4()
+        self.save(update_fields=['card_token', 'updated_date'])
+        return self.card_token
 
 
 class Skill(models.Model):
