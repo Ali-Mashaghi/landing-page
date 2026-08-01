@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'captcha',
     'rest_framework',
     'storages',
     'hero.apps.HeroConfig',
@@ -187,3 +188,10 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '15'))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@mashaghi.ir')
 CONTACT_NOTIFICATION_EMAIL = os.getenv('CONTACT_NOTIFICATION_EMAIL', DEFAULT_FROM_EMAIL)
+
+# Captcha (django-simple-captcha)
+CAPTCHA_LENGTH = 5
+CAPTCHA_FONT_SIZE = 32
+CAPTCHA_IMAGE_SIZE = (140, 50)
+CAPTCHA_TIMEOUT = 5
+CAPTCHA_TEST_MODE = os.getenv('CAPTCHA_TEST_MODE', 'False').lower() in ('true', '1', 'yes')

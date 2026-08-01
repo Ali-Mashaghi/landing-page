@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from captcha.models import CaptchaStore
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -7,6 +8,16 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from .models import Contact, Project, Skill
+
+
+def captcha_test_payload():
+    """Create a fresh captcha challenge and return valid form fields."""
+    hashkey = CaptchaStore.generate_key()
+    captcha = CaptchaStore.objects.get(hashkey=hashkey)
+    return {
+        'captcha_0': hashkey,
+        'captcha_1': captcha.response,
+    }
 
 
 class PublicAPITests(APITestCase):
@@ -235,6 +246,13 @@ class UserRegistrationTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, reverse('signup'))
+        self.assertContains(response, 'captcha')
+
+    def test_signup_page_includes_captcha(self):
+        response = self.client.get(reverse('signup'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'captcha')
 
     def test_visitor_can_create_account_and_is_logged_in(self):
         response = self.client.post(reverse('signup'), {
@@ -243,6 +261,7 @@ class UserRegistrationTests(TestCase):
             'email': 'visitor@example.com',
             'password1': 'StrongRegistrationPassword123!',
             'password2': 'StrongRegistrationPassword123!',
+            **captcha_test_payload(),
         })
 
         user = get_user_model().objects.get(email='visitor@example.com')
@@ -261,9 +280,28 @@ class UserRegistrationTests(TestCase):
         response = self.client.post(reverse('admin_login'), {
             'username': 'member@example.com',
             'password': 'StrongLoginPassword123!',
+            **captcha_test_payload(),
         })
 
         self.assertRedirects(response, reverse('index'))
+
+    def test_login_rejects_invalid_captcha(self):
+        get_user_model().objects.create_user(
+            email='member@example.com',
+            password='StrongLoginPassword123!',
+            first_name='Site',
+            last_name='Member',
+        )
+
+        response = self.client.post(reverse('admin_login'), {
+            'username': 'member@example.com',
+            'password': 'StrongLoginPassword123!',
+            'captcha_0': 'invalid',
+            'captcha_1': 'wrong',
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotIn('_auth_user_id', self.client.session)
 
 
 class BusinessCardTests(TestCase):

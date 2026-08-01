@@ -49,6 +49,14 @@
                                     {{ form.password2 }}
                                     {% if form.password2.errors %}<div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>{% endif %}
                                 </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="{{ form.captcha.id_for_label }}">{{ form.captcha.label }}</label>
+                                    <div class="d-flex flex-wrap align-items-center gap-3">
+                                        {{ form.captcha }}
+                                    </div>
+                                    {% if form.captcha.errors %}<div class="text-danger small mt-1">{{ form.captcha.errors.0 }}</div>{% endif %}
+                                    <div class="form-text">Type the characters from the image.</div>
+                                </div>
                             </div>
                             <div class="d-grid mt-4">
                                 <button type="submit" class="btn btn-primary btn-lg">Create Account</button>

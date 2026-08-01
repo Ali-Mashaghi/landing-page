@@ -25,6 +25,7 @@ admin.site.index_title = 'Site Management'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('captcha/', include('captcha.urls')),
     path('', include('hero.urls')),
     path('api/', include('hero.api.urls')),
 ]

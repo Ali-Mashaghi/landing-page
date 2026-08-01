@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from captcha.fields import CaptchaField
 from .models import Contact, Project, User, Skill
 
 
@@ -55,9 +56,20 @@ class LoginForm(AuthenticationForm):
             'placeholder': 'Password',
         }),
     )
+    captcha = CaptchaField(label='Captcha')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['captcha'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter the characters shown',
+            'autocomplete': 'off',
+        })
 
 
 class SignupForm(UserCreationForm):
+    captcha = CaptchaField(label='Captcha')
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
@@ -86,6 +98,11 @@ class SignupForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Confirm password',
+        })
+        self.fields['captcha'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter the characters shown',
+            'autocomplete': 'off',
         })
 
 
