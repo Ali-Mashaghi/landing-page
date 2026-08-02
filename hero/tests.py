@@ -2,8 +2,12 @@ from unittest.mock import patch
 
 from captcha.models import CaptchaStore
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.contrib.auth.tokens import default_token_generator
+from django.core import mail
+from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -246,6 +250,7 @@ class UserRegistrationTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, reverse('signup'))
+        self.assertContains(response, reverse('password_reset'))
         self.assertContains(response, 'captcha')
 
     def test_signup_page_includes_captcha(self):
@@ -302,6 +307,64 @@ class UserRegistrationTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotIn('_auth_user_id', self.client.session)
+
+
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+class PasswordResetTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            email='reset@example.com',
+            password='OldStrongPassword123!',
+            first_name='Reset',
+            last_name='User',
+        )
+
+    def test_password_reset_page_includes_captcha(self):
+        response = self.client.get(reverse('password_reset'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, 'captcha')
+
+    def test_password_reset_sends_email_for_existing_account(self):
+        response = self.client.post(reverse('password_reset'), {
+            'email': self.user.email,
+            **captcha_test_payload(),
+        })
+
+        self.assertRedirects(response, reverse('password_reset_done'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(self.user.email, mail.outbox[0].to)
+        self.assertIn('password-reset', mail.outbox[0].body)
+
+    def test_password_reset_unknown_email_still_shows_done_page(self):
+        response = self.client.post(reverse('password_reset'), {
+            'email': 'missing@example.com',
+            **captcha_test_payload(),
+        })
+
+        self.assertRedirects(response, reverse('password_reset_done'))
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_password_reset_confirm_updates_password(self):
+        uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        token = default_token_generator.make_token(self.user)
+        confirm_url = reverse('password_reset_confirm', kwargs={
+            'uidb64': uid,
+            'token': token,
+        })
+
+        # Django password reset uses a session-based redirect after token check.
+        response = self.client.get(confirm_url)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        response = self.client.post(response.url, {
+            'new_password1': 'BrandNewPassword123!',
+            'new_password2': 'BrandNewPassword123!',
+        })
+        self.assertRedirects(response, reverse('password_reset_complete'))
+
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('BrandNewPassword123!'))
 
 
 class BusinessCardTests(TestCase):

@@ -1,5 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordResetForm,
+    SetPasswordForm,
+    UserCreationForm,
+)
 from captcha.fields import CaptchaField
 from .models import Contact, Project, User, Skill
 
@@ -103,6 +108,40 @@ class SignupForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'Enter the characters shown',
             'autocomplete': 'off',
+        })
+
+
+class PasswordResetRequestForm(PasswordResetForm):
+    captcha = CaptchaField(label='Captcha')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label = 'Email'
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'you@example.com',
+            'autofocus': True,
+            'autocomplete': 'email',
+        })
+        self.fields['captcha'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter the characters shown',
+            'autocomplete': 'off',
+        })
+
+
+class PasswordResetConfirmForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'New password',
+            'autocomplete': 'new-password',
+        })
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Confirm new password',
+            'autocomplete': 'new-password',
         })
 
 
