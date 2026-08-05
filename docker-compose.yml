@@ -5,13 +5,16 @@ services:
       POSTGRES_DB: ${DB_NAME:-postgres}
       POSTGRES_USER: ${DB_USER:-root}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      # PG 18+: data lives under /var/lib/postgresql/18/docker
+      PGDATA: /var/lib/postgresql/18/docker
     volumes:
       - pgdata:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-root} -d ${DB_NAME:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\" || exit 1"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 40s
     restart: unless-stopped
 
   web:
@@ -39,7 +42,6 @@ services:
       - staticfiles:/app/staticfiles:ro
       - media:/app/media:ro
       - certbot-etc:/etc/letsencrypt:ro
-      - certbot-var:/var/lib/letsencrypt:ro
       - certbot-www:/var/www/certbot:ro
     depends_on:
       - web
@@ -49,9 +51,8 @@ services:
     image: certbot/certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
       - certbot-www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
     restart: unless-stopped
 
 volumes:
@@ -59,5 +60,4 @@ volumes:
   staticfiles:
   media:
   certbot-etc:
-  certbot-var:
   certbot-www:
