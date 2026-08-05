@@ -14,7 +14,7 @@ db.sqlite3
 
 # Environment variables
 .env
-
+envs.txt
 # IDE
 .idea/
 .vscode/

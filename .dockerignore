@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.Python
+
+# Django
+*.log
+db.sqlite3
+staticfiles/
+media/
+
+# Environment & secrets
+.env
+envs.txt
+
+# Git & IDE
+.git/
+.gitignore
+.idea/
+.vscode/
+*.swp
+
+# Docs & screenshots
+pics of website/
