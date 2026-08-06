@@ -33,7 +33,7 @@
                                  data-client_id="{{ google_client_id }}"
                                  data-context="signin"
                                  data-ux_mode="redirect"
-                                 data-login_uri="{{ request.scheme }}://{{ request.get_host }}{% url 'google_login' %}"
+                                 data-login_uri="{{ google_login_uri }}"
                                  data-auto_prompt="false"
                                  data-itp_support="true">
                             </div>

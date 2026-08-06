@@ -109,6 +109,7 @@ def admin_login(request):
     return render(request, 'dashboard/login.html', {
         'form': form,
         'google_client_id': settings.GOOGLE_CLIENT_ID,
+        'google_login_uri': request.build_absolute_uri(reverse('google_login')),
     })
 
 
@@ -172,6 +173,7 @@ def signup(request):
     return render(request, 'dashboard/signup.html', {
         'form': form,
         'google_client_id': settings.GOOGLE_CLIENT_ID,
+        'google_login_uri': request.build_absolute_uri(reverse('google_login')),
     })
 
 
