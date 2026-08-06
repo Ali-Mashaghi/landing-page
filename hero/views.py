@@ -132,13 +132,23 @@ def google_login(request):
     try:
         payload = verify_google_id_token(id_token_value)
         user, _created = get_or_create_user_from_google(payload)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     except GoogleAuthError as exc:
         if wants_json:
             return JsonResponse({'ok': False, 'detail': str(exc)}, status=400)
         messages.error(request, str(exc))
         return redirect('admin_login')
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception('Unexpected Google login failure')
+        if wants_json:
+            return JsonResponse(
+                {'ok': False, 'detail': 'Google sign-in failed unexpectedly.'},
+                status=500,
+            )
+        messages.error(request, 'Google sign-in failed. Please try again.')
+        return redirect('admin_login')
 
-    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     messages.success(request, 'Signed in with Google.')
 
     redirect_to = 'dashboard' if user.is_staff else 'index'
