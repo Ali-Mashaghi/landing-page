@@ -12,6 +12,7 @@ urlpatterns = [
     path('card/', views.business_card, name='business_card'),
     path('card/<uuid:token>/', views.business_card_public, name='business_card_public'),
     path('dashboard/login/', views.admin_login, name='admin_login'),
+    path('dashboard/login/google/', views.google_login, name='google_login'),
     path('signup/', views.signup, name='signup'),
     path(
         'dashboard/password-reset/',

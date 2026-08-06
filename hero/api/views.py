@@ -1,14 +1,21 @@
 from django.http import Http404
 from rest_framework import status
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from hero.models import Contact, Project, Skill, User
 from hero.services.email import send_contact_emails
+from hero.services.google_auth import (
+    GoogleAuthError,
+    get_or_create_user_from_google,
+    verify_google_id_token,
+)
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
     ContactSerializer,
@@ -20,13 +27,55 @@ from .throttles import ContactSubmissionThrottle
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def api_root(request):
     return Response({
         'profile': reverse('profile_api', request=request),
         'projects': reverse('project_list_api', request=request),
         'skills': reverse('skill_list_api', request=request),
         'contact': reverse('contact_list_api', request=request),
+        'token': reverse('token_obtain_pair', request=request),
+        'token_refresh': reverse('token_refresh', request=request),
+        'google_auth': reverse('google_auth_api', request=request),
     })
+
+
+class GoogleAuthAPIView(APIView):
+    """Exchange a Google ID token for SimpleJWT access/refresh tokens."""
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+        id_token_value = (
+            request.data.get('id_token')
+            or request.data.get('credential')
+            or ''
+        )
+        try:
+            payload = verify_google_id_token(id_token_value)
+            user, created = get_or_create_user_from_google(payload)
+        except GoogleAuthError as exc:
+            return Response(
+                {'detail': str(exc)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        refresh = RefreshToken.for_user(user)
+        return Response(
+            {
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+                'created': created,
+                'user': {
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'is_staff': user.is_staff,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class ContactListCreateAPIView(generics.ListCreateAPIView):

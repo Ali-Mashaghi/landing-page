@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
+from django.conf import settings
+from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
@@ -11,6 +13,11 @@ from functools import wraps
 from .models import Project, Contact, User
 from .forms import ContactForm, LoginForm, ProfileForm, ProjectForm, SignupForm
 from .services.email import send_contact_emails
+from .services.google_auth import (
+    GoogleAuthError,
+    get_or_create_user_from_google,
+    verify_google_id_token,
+)
 
 
 def staff_required(view_func):
@@ -98,7 +105,43 @@ def admin_login(request):
             return redirect(next_url)
         return redirect('dashboard' if user.is_staff else 'index')
 
-    return render(request, 'dashboard/login.html', {'form': form})
+    return render(request, 'dashboard/login.html', {
+        'form': form,
+        'google_client_id': settings.GOOGLE_CLIENT_ID,
+    })
+
+
+@require_POST
+def google_login(request):
+    """Session login/signup via Google Identity Services credential."""
+    id_token_value = request.POST.get('credential') or request.POST.get('id_token') or ''
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+
+    try:
+        payload = verify_google_id_token(id_token_value)
+        user, _created = get_or_create_user_from_google(payload)
+    except GoogleAuthError as exc:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'ok': False, 'detail': str(exc)}, status=400)
+        messages.error(request, str(exc))
+        return redirect('admin_login')
+
+    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+    messages.success(request, 'Signed in with Google.')
+
+    redirect_to = 'dashboard' if user.is_staff else 'index'
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        redirect_to_url = next_url
+    else:
+        redirect_to_url = reverse(redirect_to)
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'ok': True, 'redirect': redirect_to_url})
+    return redirect(redirect_to_url)
 
 
 def signup(request):
@@ -115,7 +158,10 @@ def signup(request):
     else:
         form = SignupForm()
 
-    return render(request, 'dashboard/signup.html', {'form': form})
+    return render(request, 'dashboard/signup.html', {
+        'form': form,
+        'google_client_id': settings.GOOGLE_CLIENT_ID,
+    })
 
 
 @require_POST
