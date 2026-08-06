@@ -89,6 +89,12 @@ SIMPLE_JWT = {
 # Google Sign-In (OAuth / Identity Services)
 GOOGLE_CLIENT_ID = (os.getenv('GOOGLE_CLIENT_ID', '') or '').strip().strip('"').strip("'")
 GOOGLE_CLIENT_SECRET = (os.getenv('GOOGLE_CLIENT_SECRET', '') or '').strip().strip('"').strip("'")
+# Optional: HTTP(S) proxy for fetching Google certs (useful on blocked VPS networks)
+GOOGLE_HTTPS_PROXY = (os.getenv('GOOGLE_HTTPS_PROXY', '') or '').strip()
+# Optional: custom JWKS URL (default: Google oauth2/v3/certs)
+GOOGLE_JWKS_URL = (os.getenv('GOOGLE_JWKS_URL', '') or '').strip()
+# Local JWKS cache — required when the VPS cannot reach googleapis.com
+GOOGLE_JWKS_PATH = (os.getenv('GOOGLE_JWKS_PATH', '') or str(BASE_DIR / 'data' / 'google_jwks.json')).strip()
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
