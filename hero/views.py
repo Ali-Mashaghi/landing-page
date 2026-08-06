@@ -22,13 +22,11 @@ from .services.google_auth import (
 
 
 def staff_required(view_func):
+    """Require login for dashboard views (any authenticated user)."""
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
-        if not request.user.is_staff:
-            messages.error(request, 'You do not have permission to access the admin panel.')
-            return redirect('index')
         return view_func(request, *args, **kwargs)
     return wrapper
 
@@ -90,7 +88,7 @@ def business_card_public(request, token):
 
 def admin_login(request):
     if request.user.is_authenticated:
-        return redirect('dashboard' if request.user.is_staff else 'index')
+        return redirect('dashboard')
 
     form = LoginForm(request, data=request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -104,7 +102,7 @@ def admin_login(request):
             require_https=request.is_secure(),
         ):
             return redirect(next_url)
-        return redirect('dashboard' if user.is_staff else 'index')
+        return redirect('dashboard')
 
     return render(request, 'dashboard/login.html', {
         'form': form,
@@ -151,7 +149,7 @@ def google_login(request):
 
     messages.success(request, 'Signed in with Google.')
 
-    redirect_to = 'dashboard' if user.is_staff else 'index'
+    redirect_to = 'dashboard'
     if next_url and url_has_allowed_host_and_scheme(
         next_url,
         allowed_hosts={request.get_host()},
@@ -168,7 +166,7 @@ def google_login(request):
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('dashboard' if request.user.is_staff else 'index')
+        return redirect('dashboard')
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -176,7 +174,7 @@ def signup(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Your account was created successfully.')
-            return redirect('index')
+            return redirect('dashboard')
     else:
         form = SignupForm()
 
