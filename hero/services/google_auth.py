@@ -1,45 +1,89 @@
 import logging
 
+import jwt
+import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from google.auth.transport import requests as google_requests
-from google.oauth2 import id_token
+from jwt import PyJWKClient
 
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
+
+GOOGLE_CERTS_URL = 'https://www.googleapis.com/oauth2/v3/certs'
+GOOGLE_ISSUERS = {
+    'accounts.google.com',
+    'https://accounts.google.com',
+}
 
 
 class GoogleAuthError(Exception):
     """Raised when Google ID token verification or user provisioning fails."""
 
 
+def _client_id() -> str:
+    return (getattr(settings, 'GOOGLE_CLIENT_ID', '') or '').strip().strip('"').strip("'")
+
+
 def verify_google_id_token(token: str) -> dict:
-    client_id = (getattr(settings, 'GOOGLE_CLIENT_ID', '') or '').strip()
+    client_id = _client_id()
     if not client_id:
         raise GoogleAuthError('Google Sign-In is not configured on the server.')
-    if not token:
+    if not token or not isinstance(token, str):
         raise GoogleAuthError('Missing Google ID token.')
 
     try:
-        payload = id_token.verify_oauth2_token(
+        jwks_client = PyJWKClient(GOOGLE_CERTS_URL, cache_keys=True, lifespan=3600)
+        signing_key = jwks_client.get_signing_key_from_jwt(token)
+        payload = jwt.decode(
             token,
-            google_requests.Request(),
+            signing_key.key,
+            algorithms=['RS256'],
             audience=client_id,
-            clock_skew_in_seconds=10,
+            issuer=list(GOOGLE_ISSUERS),
+            options={
+                'require': ['exp', 'iat', 'iss', 'aud', 'email'],
+            },
+            leeway=30,
         )
-    except ValueError as exc:
-        logger.warning('Google ID token rejected: %s', exc)
-        raise GoogleAuthError('Invalid or expired Google ID token.') from exc
-    except Exception as exc:
-        logger.exception('Google ID token verification failed')
+    except jwt.ExpiredSignatureError as exc:
+        raise GoogleAuthError('Google sign-in expired. Please try again.') from exc
+    except jwt.InvalidAudienceError as exc:
+        logger.warning(
+            'Google audience mismatch. Expected client_id=%r',
+            client_id[:20] + '...',
+        )
         raise GoogleAuthError(
-            'Could not verify Google sign-in. Please try again.'
+            'Google Client ID on the server does not match this app. '
+            'Check GOOGLE_CLIENT_ID in .env.'
         ) from exc
-
-    issuer = payload.get('iss')
-    if issuer not in ('accounts.google.com', 'https://accounts.google.com'):
-        raise GoogleAuthError('Invalid token issuer.')
+    except jwt.InvalidIssuerError as exc:
+        raise GoogleAuthError('Invalid Google token issuer.') from exc
+    except jwt.PyJWKClientConnectionError as exc:
+        logger.exception('Cannot download Google JWKS from %s', GOOGLE_CERTS_URL)
+        raise GoogleAuthError(
+            'Server cannot reach Google (certs). '
+            'Outbound HTTPS to googleapis.com is blocked or timed out.'
+        ) from exc
+    except jwt.PyJWKClientError as exc:
+        logger.exception('Google JWKS/client error')
+        raise GoogleAuthError(
+            f'Could not load Google signing keys: {exc}'
+        ) from exc
+    except jwt.InvalidTokenError as exc:
+        logger.warning('Invalid Google JWT: %s', exc)
+        raise GoogleAuthError('Invalid Google ID token.') from exc
+    except requests.RequestException as exc:
+        logger.exception('Network error verifying Google token')
+        raise GoogleAuthError(
+            'Server cannot reach Google to verify sign-in. '
+            'Check VPS outbound network / firewall.'
+        ) from exc
+    except Exception as exc:
+        logger.exception('Unexpected Google token verification failure')
+        raise GoogleAuthError(
+            f'Could not verify Google sign-in ({type(exc).__name__}: {exc})'
+        ) from exc
 
     email = (payload.get('email') or '').strip()
     if not email:
@@ -57,7 +101,6 @@ def get_or_create_user_from_google(payload: dict):
     first_name = (payload.get('given_name') or '').strip() or email.split('@')[0]
     last_name = (payload.get('family_name') or '').strip() or '-'
 
-    # Cap lengths to model field limits
     first_name = first_name[:200]
     last_name = last_name[:200]
 
@@ -73,7 +116,6 @@ def get_or_create_user_from_google(payload: dict):
             user.last_name = last_name
             updated_fields.append('last_name')
         if updated_fields:
-            # auto_now fields should not be listed in update_fields on all Django versions
             user.save(update_fields=updated_fields)
         return user, False
 
@@ -90,7 +132,6 @@ def get_or_create_user_from_google(payload: dict):
         user.save()
     except Exception as exc:
         logger.exception('Failed creating user from Google payload for %s', email)
-        # Race: another request created the same email
         user = User.objects.filter(email__iexact=email).first()
         if user is None:
             raise GoogleAuthError('Could not create account from Google.') from exc
