@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from functools import wraps
 
@@ -111,17 +112,27 @@ def admin_login(request):
     })
 
 
+@csrf_exempt
 @require_POST
 def google_login(request):
-    """Session login/signup via Google Identity Services credential."""
+    """
+    Session login/signup via Google Identity Services.
+
+    CSRF is exempt because Google redirect mode POSTs credential here
+    without our CSRF cookie. Security comes from verifying the ID token.
+    """
     id_token_value = request.POST.get('credential') or request.POST.get('id_token') or ''
     next_url = request.POST.get('next') or request.GET.get('next') or ''
+    wants_json = (
+        request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        or 'application/json' in (request.headers.get('Accept') or '')
+    )
 
     try:
         payload = verify_google_id_token(id_token_value)
         user, _created = get_or_create_user_from_google(payload)
     except GoogleAuthError as exc:
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if wants_json:
             return JsonResponse({'ok': False, 'detail': str(exc)}, status=400)
         messages.error(request, str(exc))
         return redirect('admin_login')
@@ -139,7 +150,7 @@ def google_login(request):
     else:
         redirect_to_url = reverse(redirect_to)
 
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    if wants_json:
         return JsonResponse({'ok': True, 'redirect': redirect_to_url})
     return redirect(redirect_to_url)
 

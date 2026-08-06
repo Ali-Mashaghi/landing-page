@@ -32,9 +32,10 @@
                             <div id="g_id_onload"
                                  data-client_id="{{ google_client_id }}"
                                  data-context="signin"
-                                 data-ux_mode="popup"
-                                 data-callback="handleGoogleCredential"
-                                 data-auto_prompt="false">
+                                 data-ux_mode="redirect"
+                                 data-login_uri="{{ request.scheme }}://{{ request.get_host }}{% url 'google_login' %}"
+                                 data-auto_prompt="false"
+                                 data-itp_support="true">
                             </div>
                             <div class="g_id_signin"
                                  data-type="standard"
@@ -47,7 +48,6 @@
                             </div>
                         </div>
                         <div class="text-center text-muted small mb-3">or continue with email</div>
-                        <div id="google-auth-error" class="alert alert-danger d-none" role="alert"></div>
                         {% endif %}
 
                         <form method="post" novalidate>
@@ -98,49 +98,5 @@
 {% block extra_js %}
 {% if google_client_id %}
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
-}
-
-async function handleGoogleCredential(response) {
-    const errorBox = document.getElementById('google-auth-error');
-    if (errorBox) {
-        errorBox.classList.add('d-none');
-        errorBox.textContent = '';
-    }
-
-    const body = new URLSearchParams();
-    body.set('credential', response.credential);
-    const next = new URLSearchParams(window.location.search).get('next');
-    if (next) body.set('next', next);
-
-    try {
-        const res = await fetch('{% url "google_login" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': getCookie('csrftoken'),
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            body: body.toString(),
-            credentials: 'same-origin',
-        });
-        const data = await res.json();
-        if (!res.ok || !data.ok) {
-            throw new Error(data.detail || 'Google sign-in failed.');
-        }
-        window.location.href = data.redirect || '{% url "dashboard" %}';
-    } catch (err) {
-        if (errorBox) {
-            errorBox.textContent = err.message || 'Google sign-in failed.';
-            errorBox.classList.remove('d-none');
-        }
-    }
-}
-</script>
 {% endif %}
 {% endblock %}
