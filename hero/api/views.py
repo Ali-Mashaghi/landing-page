@@ -9,6 +9,8 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.utils.translation import gettext as _
+
 from hero.models import Contact, Project, Skill, User
 from hero.services.email import send_contact_emails
 from hero.services.google_auth import (
@@ -110,7 +112,7 @@ class ContactListCreateAPIView(generics.ListCreateAPIView):
             return Response(
                 {
                     'success': False,
-                    'message': (
+                    'message': _(
                         'Your message was saved, but email delivery failed. '
                         'Please try again later.'
                     ),
@@ -121,7 +123,7 @@ class ContactListCreateAPIView(generics.ListCreateAPIView):
         return Response(
             {
                 'success': True,
-                'message': 'Your message has been sent successfully!',
+                'message': _('Your message has been sent successfully!'),
                 'contact_id': contact.pk,
             },
             status=status.HTTP_201_CREATED,

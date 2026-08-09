@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Resume - {% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans "Resume" %} - {% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}{% endblock %}
 
 {% block content %}
 <section class="resume-hero d-flex align-items-center justify-content-center py-5">
     <div class="container px-4">
         <div class="d-flex flex-column align-items-center">
-            <div class="resume-view-switcher" role="tablist" aria-label="Resume card views">
-                <button class="resume-view-btn active" type="button" data-resume-view="profile" role="tab" aria-selected="true" title="Profile">
+            <div class="resume-view-switcher" role="tablist" aria-label="{% trans 'Resume card views' %}">
+                <button class="resume-view-btn active" type="button" data-resume-view="profile" role="tab" aria-selected="true" title="{% trans 'Profile' %}">
                     <i class="bi bi-person-fill"></i>
                 </button>
-                <button class="resume-view-btn" type="button" data-resume-view="telegram" role="tab" aria-selected="false" title="Telegram QR Code">
+                <button class="resume-view-btn" type="button" data-resume-view="telegram" role="tab" aria-selected="false" title="{% trans 'Telegram QR Code' %}">
                     <i class="bi bi-qr-code"></i>
                 </button>
             </div>
@@ -23,7 +23,7 @@
                     <p class="mb-4 opacity-75 small">{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Lorem ipsum dolor sit amet{% endif %}</p>
                     {% if site_profile and site_profile.resume %}
                     <a class="btn resume-download-btn px-4 py-2 rounded-pill" href="{{ site_profile.resume.url }}" target="_blank" download>
-                        <i class="bi bi-download me-2"></i>Download Resume
+                        <i class="bi bi-download me-2"></i>{% trans "Download Resume" %}
                     </a>
                     {% endif %}
                 </div>
@@ -33,10 +33,10 @@
                         <h2 class="h5 fw-bold mb-0">Telegram</h2>
                     </div>
                     {% if site_profile and site_profile.telegram_url %}
-                    <a class="telegram-qr-frame" href="{{ site_profile.telegram_url }}" target="_blank" title="Open Telegram">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={{ site_profile.telegram_url|urlencode }}" alt="Telegram QR Code">
+                    <a class="telegram-qr-frame" href="{{ site_profile.telegram_url }}" target="_blank" title="{% trans 'Open Telegram' %}">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={{ site_profile.telegram_url|urlencode }}" alt="{% trans 'Telegram QR Code' %}">
                     </a>
-                    <p class="small opacity-75 mt-3 mb-0">Scan or tap to connect</p>
+                    <p class="small opacity-75 mt-3 mb-0">{% trans "Scan or tap to connect" %}</p>
                     {% else %}
                     <div class="telegram-empty-state">
                         <i class="bi bi-telegram display-5 mb-3"></i>

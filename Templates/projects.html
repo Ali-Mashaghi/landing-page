@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Projects - Ali Mashaghi{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans "Projects" %} - Ali Mashaghi{% endblock %}
 {% block content %}
     <header class="site-page-hero">
         <div class="container px-5 position-relative text-center">
-            <span class="eyebrow"><i class="bi bi-grid-1x2-fill"></i> Selected work</span>
-            <h1 class="display-4 fw-bolder mb-3"><span class="text-gradient">Projects built for impact</span></h1>
-            <p class="lead text-muted mx-auto mb-0 page-intro">A collection of digital products focused on clear experiences, solid engineering, and measurable business value.</p>
+            <span class="eyebrow"><i class="bi bi-grid-1x2-fill"></i> {% trans "Selected work" %}</span>
+            <h1 class="display-4 fw-bolder mb-3"><span class="text-gradient">{% trans "Projects built for impact" %}</span></h1>
+            <p class="lead text-muted mx-auto mb-0 page-intro">{% trans "A collection of digital products focused on clear experiences, solid engineering, and measurable business value." %}</p>
         </div>
     </header>
 
@@ -28,7 +28,7 @@
                             <div class="col-lg-6">
                                 <div class="p-4 p-md-5 h-100 d-flex flex-column justify-content-center">
                                     <div class="d-flex align-items-center gap-2 text-primary small fw-bold mb-3">
-                                        <span>PROJECT</span>
+                                        <span>{% trans "PROJECT" %}</span>
                                         <span class="opacity-25">•</span>
                                         <span class="text-muted">{{ project.created_at|jalali_datetime }}</span>
                                     </div>
@@ -37,7 +37,7 @@
                                     {% if project.repo_url %}
                                     <div>
                                         <a href="{{ project.repo_url }}" class="btn btn-primary px-4 py-3" target="_blank" rel="noopener">
-                                            View Project <i class="bi bi-arrow-up-right ms-2"></i>
+                                            {% trans "View Project" %} <i class="bi bi-arrow-up-right ms-2"></i>
                                         </a>
                                     </div>
                                     {% endif %}
@@ -50,8 +50,8 @@
                 <div class="col-lg-8">
                     <div class="glass-panel text-center p-5">
                         <i class="bi bi-folder2-open display-4 text-primary"></i>
-                        <h2 class="h4 fw-bold mt-3">New projects are on the way</h2>
-                        <p class="text-muted mb-0">Check back soon to see the latest work.</p>
+                        <h2 class="h4 fw-bold mt-3">{% trans "New projects are on the way" %}</h2>
+                        <p class="text-muted mb-0">{% trans "Check back soon to see the latest work." %}</p>
                     </div>
                 </div>
                 {% endfor %}
@@ -62,10 +62,10 @@
     <section class="py-5 bg-gradient-primary-to-secondary text-white">
         <div class="container px-5 my-5">
             <div class="text-center">
-                <span class="eyebrow bg-white text-primary">Start a project</span>
-                <h2 class="display-4 fw-bolder mb-3">Let's build something valuable</h2>
-                <p class="lead opacity-75 mb-4">Tell me about your goals and let's turn them into a focused digital experience.</p>
-                <a class="btn btn-light text-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">Let's talk <i class="bi bi-arrow-right ms-2"></i></a>
+                <span class="eyebrow bg-white text-primary">{% trans "Start a project" %}</span>
+                <h2 class="display-4 fw-bolder mb-3">{% trans "Let's build something valuable" %}</h2>
+                <p class="lead opacity-75 mb-4">{% trans "Tell me about your goals and let's turn them into a focused digital experience." %}</p>
+                <a class="btn btn-light text-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">{% trans "Let's talk" %} <i class="bi bi-arrow-{% if LANGUAGE_CODE == 'fa' %}left{% else %}right{% endif %} ms-2"></i></a>
             </div>
         </div>
     </section>

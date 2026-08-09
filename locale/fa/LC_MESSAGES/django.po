@@ -1,0 +1,313 @@
+# Persian translations for landing-page
+msgid ""
+msgstr ""
+"Project-Id-Version: landing-page\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Home"
+msgstr "خانه"
+
+msgid "Resume"
+msgstr "رزومه"
+
+msgid "Projects"
+msgstr "پروژه‌ها"
+
+msgid "Card"
+msgstr "کارت"
+
+msgid "Contact"
+msgstr "تماس"
+
+msgid "Language"
+msgstr "زبان"
+
+msgid "Switch to English"
+msgstr "تغییر به انگلیسی"
+
+msgid "Switch to Persian"
+msgstr "تغییر به فارسی"
+
+msgid "Toggle navigation"
+msgstr "باز و بسته کردن منو"
+
+msgid "Profile"
+msgstr "پروفایل"
+
+msgid "Dashboard"
+msgstr "داشبورد"
+
+msgid "Logout"
+msgstr "خروج"
+
+msgid "Login"
+msgstr "ورود"
+
+msgid "Navigation"
+msgstr "ناوبری"
+
+msgid "Services"
+msgstr "خدمات"
+
+msgid "Web Development"
+msgstr "توسعه وب"
+
+msgid "UI/UX Design"
+msgstr "طراحی UI/UX"
+
+msgid "Consulting"
+msgstr "مشاوره"
+
+msgid "Connect"
+msgstr "ارتباط"
+
+msgid "Get in Touch"
+msgstr "ارتباط با من"
+
+msgid "Get In Touch"
+msgstr "ارتباط با من"
+
+msgid "All rights reserved."
+msgstr "تمامی حقوق محفوظ است."
+
+msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore."
+msgstr "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است."
+
+msgid "Make an impact"
+msgstr "تأثیر بگذارید"
+
+msgid "Hi, I'm %(name)s."
+msgstr "سلام، من %(name)s هستم."
+
+msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+msgstr "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است."
+
+msgid "View Resume"
+msgstr "مشاهده رزومه"
+
+msgid "My Projects"
+msgstr "پروژه‌های من"
+
+msgid "How I Grow Your Business"
+msgstr "چطور کسب‌وکارتان را رشد می‌دهم"
+
+msgid "Digital solutions focused on trust, conversion, and sustainable growth"
+msgstr "راه‌حل‌های دیجیتال متمرکز بر اعتماد، تبدیل و رشد پایدار"
+
+msgid "Turn Visitors Into Customers"
+msgstr "تبدیل بازدیدکننده به مشتری"
+
+msgid "I create clear, conversion-focused websites that guide visitors toward taking action—helping you generate more leads and increase sales."
+msgstr "وب‌سایت‌هایی شفاف و متمرکز بر تبدیل می‌سازم که بازدیدکننده را به اقدام هدایت می‌کنند و به افزایش سرنخ و فروش کمک می‌کنند."
+
+msgid "Increase conversions"
+msgstr "افزایش نرخ تبدیل"
+
+msgid "Build Trust In Your Brand"
+msgstr "ایجاد اعتماد به برند شما"
+
+msgid "A polished and intuitive experience makes your business look credible, keeps customers engaged, and gives them confidence to choose you."
+msgstr "تجربه‌ای حرفه‌ای و ساده، کسب‌وکار شما را معتبر نشان می‌دهد، مشتری را درگیر نگه می‌دارد و اعتماد لازم برای انتخاب شما را می‌سازد."
+
+msgid "Strengthen your brand"
+msgstr "تقویت برند شما"
+
+msgid "Reach More Customers"
+msgstr "دسترسی به مشتریان بیشتر"
+
+msgid "Fast, responsive, and accessible experiences help customers find and use your website easily on any device—wherever they are."
+msgstr "تجربه‌های سریع، واکنش‌گرا و دسترس‌پذیر کمک می‌کنند مشتری در هر دستگاهی به‌راحتی سایت شما را پیدا و استفاده کند."
+
+msgid "Expand your reach"
+msgstr "گسترش دسترسی"
+
+msgid "My Skills"
+msgstr "مهارت‌های من"
+
+msgid "Technologies I work with"
+msgstr "فناوری‌هایی که با آن‌ها کار می‌کنم"
+
+msgid "About Me"
+msgstr "درباره من"
+
+msgid "I'm a passionate web developer based in %(location)s"
+msgstr "من یک توسعه‌دهنده وب علاقه‌مند هستم و در %(location)s زندگی می‌کنم"
+
+msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+msgstr "لورم ایپسوم متن ساختگی است."
+
+msgid "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada."
+msgstr "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است."
+
+msgid "I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to work together or just want to say hi!"
+msgstr "همیشه برای فرصت‌ها و همکاری‌های جدید آماده‌ام. اگر دوست دارید با هم کار کنیم یا فقط سلام کنید، خوشحال می‌شوم."
+
+msgid "Let's Work Together"
+msgstr "بیایید با هم کار کنیم"
+
+msgid "Have a project in mind? I'd love to hear about it!"
+msgstr "پروژه‌ای در ذهن دارید؟ خوشحال می‌شوم درباره‌اش بشنوم!"
+
+msgid "Start a conversation"
+msgstr "شروع گفتگو"
+
+msgid "Let's create something meaningful"
+msgstr "بیایید چیزی معنادار بسازیم"
+
+msgid "Share your idea, challenge, or business goal. I'll get back to you with a clear next step."
+msgstr "ایده، چالش یا هدف کسب‌وکارتان را بنویسید. با گام بعدی شفاف به شما پاسخ می‌دهم."
+
+msgid "Why work together"
+msgstr "چرا با هم کار کنیم"
+
+msgid "A focused process, built around your goals."
+msgstr "فرآیندی متمرکز، ساخته‌شده حول اهداف شما."
+
+msgid "You will get practical communication, thoughtful design decisions, and a solution shaped to support real business outcomes."
+msgstr "ارتباط عملی، تصمیم‌های طراحی سنجیده و راه‌حلی متناسب با نتایج واقعی کسب‌وکار دریافت می‌کنید."
+
+msgid "Clear and responsive"
+msgstr "شفاف و پاسخ‌گو"
+
+msgid "Straightforward communication from idea to delivery."
+msgstr "ارتباط ساده و شفاف از ایده تا تحویل."
+
+msgid "Business-first thinking"
+msgstr "نگاه کسب‌وکارمحور"
+
+msgid "Every decision connects back to your audience and goals."
+msgstr "هر تصمیم به مخاطب و اهداف شما وصل می‌شود."
+
+msgid "Reliable delivery"
+msgstr "تحویل قابل‌اعتماد"
+
+msgid "Modern, maintainable, and scalable work you can build on."
+msgstr "کاری مدرن، قابل نگهداری و مقیاس‌پذیر که می‌توانید روی آن بنا کنید."
+
+msgid "Your message"
+msgstr "پیام شما"
+
+msgid "Tell me about your project"
+msgstr "درباره پروژه‌تان بگویید"
+
+msgid "Sending..."
+msgstr "در حال ارسال..."
+
+msgid "Send Message"
+msgstr "ارسال پیام"
+
+msgid "Please fix the following errors:"
+msgstr "لطفاً خطاهای زیر را برطرف کنید:"
+
+msgid "An error occurred. Please try again."
+msgstr "خطایی رخ داد. لطفاً دوباره تلاش کنید."
+
+msgid "Close"
+msgstr "بستن"
+
+msgid "Your name"
+msgstr "نام شما"
+
+msgid "Full name"
+msgstr "نام کامل"
+
+msgid "A name is required."
+msgstr "وارد کردن نام الزامی است."
+
+msgid "Email address"
+msgstr "ایمیل"
+
+msgid "A valid email is required."
+msgstr "ایمیل معتبر الزامی است."
+
+msgid "Phone number"
+msgstr "شماره تلفن"
+
+msgid "A phone number is required."
+msgstr "شماره تلفن الزامی است."
+
+msgid "Message"
+msgstr "پیام"
+
+msgid "A message is required."
+msgstr "وارد کردن پیام الزامی است."
+
+msgid "Selected work"
+msgstr "نمونه کارها"
+
+msgid "Projects built for impact"
+msgstr "پروژه‌هایی برای اثرگذاری"
+
+msgid "A collection of digital products focused on clear experiences, solid engineering, and measurable business value."
+msgstr "مجموعه‌ای از محصولات دیجیتال با تمرکز بر تجربه شفاف، مهندسی قوی و ارزش قابل اندازه‌گیری برای کسب‌وکار."
+
+msgid "PROJECT"
+msgstr "پروژه"
+
+msgid "View Project"
+msgstr "مشاهده پروژه"
+
+msgid "New projects are on the way"
+msgstr "پروژه‌های جدید در راه هستند"
+
+msgid "Check back soon to see the latest work."
+msgstr "به‌زودی برای دیدن آخرین کارها سر بزنید."
+
+msgid "Start a project"
+msgstr "شروع یک پروژه"
+
+msgid "Let's build something valuable"
+msgstr "بیایید چیزی ارزشمند بسازیم"
+
+msgid "Tell me about your goals and let's turn them into a focused digital experience."
+msgstr "اهدافتان را بگویید تا به یک تجربه دیجیتال متمرکز تبدیلشان کنیم."
+
+msgid "Let's talk"
+msgstr "صحبت کنیم"
+
+msgid "Resume card views"
+msgstr "نمای کارت رزومه"
+
+msgid "Telegram QR Code"
+msgstr "کد QR تلگرام"
+
+msgid "Download Resume"
+msgstr "دانلود رزومه"
+
+msgid "Open Telegram"
+msgstr "باز کردن تلگرام"
+
+msgid "Scan or tap to connect"
+msgstr "اسکن کنید یا لمس کنید تا وصل شوید"
+
+msgid "Business Card"
+msgstr "کارت ویزیت"
+
+msgid "Digital Business Card"
+msgstr "کارت ویزیت دیجیتال"
+
+msgid "Tap the card to flip it and use the links below to connect."
+msgstr "روی کارت بزنید تا برگردد و از لینک‌های زیر برای ارتباط استفاده کنید."
+
+msgid "Flip business card"
+msgstr "چرخاندن کارت ویزیت"
+
+msgid "Digital Card"
+msgstr "کارت دیجیتال"
+
+msgid "Professional Title"
+msgstr "عنوان شغلی"
+
+msgid "Flip"
+msgstr "برگردان"
+
+msgid "Your message has been sent successfully!"
+msgstr "پیام شما با موفقیت ارسال شد!"
+
+msgid "Your message was saved, but email delivery failed. Please try again later."
+msgstr "پیام شما ذخیره شد، اما ارسال ایمیل ناموفق بود. لطفاً بعداً دوباره تلاش کنید."

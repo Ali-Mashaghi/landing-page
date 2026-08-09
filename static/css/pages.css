@@ -316,3 +316,102 @@
         transform: none !important;
     }
 }
+
+/* Language switcher */
+.lang-switch-form {
+    margin: 0;
+}
+
+.lang-switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .2rem .25rem .2rem .45rem;
+    border: 1px solid rgba(30, 48, 243, .14);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(238, 242, 255, .95), rgba(255, 255, 255, .9));
+    box-shadow: 0 8px 20px rgba(30, 48, 243, .08);
+    color: #1f2937;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.lang-switch-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(30, 48, 243, .28);
+    box-shadow: 0 12px 24px rgba(30, 48, 243, .14);
+}
+
+.lang-switch-icon {
+    display: inline-flex;
+    color: #1e30f3;
+    font-size: .95rem;
+}
+
+.lang-switch-track {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-width: 4.4rem;
+    padding: .15rem;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, .06);
+}
+
+.lang-switch-option {
+    position: relative;
+    z-index: 1;
+    padding: .2rem .35rem;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    color: rgba(15, 23, 42, .45);
+    transition: color .2s ease;
+}
+
+.lang-switch-option.is-active {
+    color: #fff;
+}
+
+.lang-switch-thumb {
+    position: absolute;
+    top: .15rem;
+    bottom: .15rem;
+    left: .15rem;
+    width: calc(50% - .15rem);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1e30f3, #e21e80);
+    box-shadow: 0 6px 14px rgba(30, 48, 243, .28);
+    transition: transform .22s ease;
+}
+
+.lang-switch-thumb.is-fa {
+    transform: translateX(100%);
+}
+
+/* Persian / RTL refinements */
+html[dir="rtl"] body,
+body.lang-fa {
+    font-family: 'Vazirmatn', 'Plus Jakarta Sans', sans-serif;
+}
+
+html[dir="rtl"] .text-xxl-start {
+    text-align: right !important;
+}
+
+html[dir="rtl"] .service-glass-card .service-number {
+    right: auto;
+    left: 1.25rem;
+}
+
+html[dir="rtl"] .navbar-nav {
+    text-align: right;
+}
+
+@media (min-width: 992px) {
+    html[dir="rtl"] .navbar-nav.ms-auto {
+        margin-right: auto !important;
+        margin-left: 0 !important;
+    }
+}
+

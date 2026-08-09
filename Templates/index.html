@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}{% if site_profile %}{{ site_profile.full_name }} - Home{% else %}Lorem Ipsum - Home{% endif %}{% endblock %}
+{% load static i18n %}
+{% block title %}{% if site_profile %}{{ site_profile.full_name }} - {% trans "Home" %}{% else %}Lorem Ipsum - {% trans "Home" %}{% endif %}{% endblock %}
 {% block content %}
     <!-- Header-->
     <header class="py-5 home-hero">
@@ -11,11 +11,11 @@
                     <div class="text-center text-xxl-start hero-copy">
                         <div class="eyebrow"><i class="bi bi-stars"></i>{% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Lorem ipsum dolor sit amet{% endif %}</div>
                         <div class="fs-3 fw-light text-muted">{% if site_profile and site_profile.tagline %}{{ site_profile.tagline }}{% else %}Consectetur adipiscing elit{% endif %}</div>
-                        <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">Make an impact</span></h1>
-                        <p class="lead text-muted mb-4">{% if site_profile %}Hi, I'm {{ site_profile.full_name }}. {% if site_profile.bio %}{{ site_profile.bio }}{% endif %}{% else %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.{% endif %}</p>
+                        <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">{% trans "Make an impact" %}</span></h1>
+                        <p class="lead text-muted mb-4">{% if site_profile %}{% blocktrans with name=site_profile.full_name %}Hi, I'm {{ name }}.{% endblocktrans %} {% if site_profile.bio %}{{ site_profile.bio }}{% endif %}{% else %}{% trans "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." %}{% endif %}</p>
                         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
-                            <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/resume/">View Resume</a>
-                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="/projects/">My Projects <i class="bi bi-arrow-up-right ms-2"></i></a>
+                            <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="{% url 'resume' %}">{% trans "View Resume" %}</a>
+                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'projects' %}">{% trans "My Projects" %} <i class="bi bi-arrow-up-right ms-2"></i></a>
                         </div>
                     </div>
                 </div>
@@ -37,8 +37,8 @@
     <section class="py-5 services-glass-section">
         <div class="container px-5">
             <div class="text-center mb-5 position-relative">
-                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">How I Grow Your Business</span></h2>
-                <p class="lead text-muted">Digital solutions focused on trust, conversion, and sustainable growth</p>
+                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">{% trans "How I Grow Your Business" %}</span></h2>
+                <p class="lead text-muted">{% trans "Digital solutions focused on trust, conversion, and sustainable growth" %}</p>
             </div>
             <div class="row g-4 position-relative">
                 <div class="col-lg-4 mb-5">
@@ -48,9 +48,9 @@
                             <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
                                 <i class="bi bi-code-slash"></i>
                             </div>
-                            <h3 class="h4 fw-bolder mb-2">Turn Visitors Into Customers</h3>
-                            <p class="text-muted mb-4">I create clear, conversion-focused websites that guide visitors toward taking action—helping you generate more leads and increase sales.</p>
-                            <span class="service-arrow">Increase conversions <i class="bi bi-arrow-up-right"></i></span>
+                            <h3 class="h4 fw-bolder mb-2">{% trans "Turn Visitors Into Customers" %}</h3>
+                            <p class="text-muted mb-4">{% trans "I create clear, conversion-focused websites that guide visitors toward taking action—helping you generate more leads and increase sales." %}</p>
+                            <span class="service-arrow">{% trans "Increase conversions" %} <i class="bi bi-arrow-up-right"></i></span>
                         </div>
                     </article>
                 </div>
@@ -61,9 +61,9 @@
                             <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
                                 <i class="bi bi-palette"></i>
                             </div>
-                            <h3 class="h4 fw-bolder mb-2">Build Trust In Your Brand</h3>
-                            <p class="text-muted mb-4">A polished and intuitive experience makes your business look credible, keeps customers engaged, and gives them confidence to choose you.</p>
-                            <span class="service-arrow">Strengthen your brand <i class="bi bi-arrow-up-right"></i></span>
+                            <h3 class="h4 fw-bolder mb-2">{% trans "Build Trust In Your Brand" %}</h3>
+                            <p class="text-muted mb-4">{% trans "A polished and intuitive experience makes your business look credible, keeps customers engaged, and gives them confidence to choose you." %}</p>
+                            <span class="service-arrow">{% trans "Strengthen your brand" %} <i class="bi bi-arrow-up-right"></i></span>
                         </div>
                     </article>
                 </div>
@@ -74,9 +74,9 @@
                             <div class="icon-container bg-primary bg-gradient text-white rounded-3 mb-3">
                                 <i class="bi bi-phone"></i>
                             </div>
-                            <h3 class="h4 fw-bolder mb-2">Reach More Customers</h3>
-                            <p class="text-muted mb-4">Fast, responsive, and accessible experiences help customers find and use your website easily on any device—wherever they are.</p>
-                            <span class="service-arrow">Expand your reach <i class="bi bi-arrow-up-right"></i></span>
+                            <h3 class="h4 fw-bolder mb-2">{% trans "Reach More Customers" %}</h3>
+                            <p class="text-muted mb-4">{% trans "Fast, responsive, and accessible experiences help customers find and use your website easily on any device—wherever they are." %}</p>
+                            <span class="service-arrow">{% trans "Expand your reach" %} <i class="bi bi-arrow-up-right"></i></span>
                         </div>
                     </article>
                 </div>
@@ -88,8 +88,8 @@
     <section class="py-5 bg-light">
         <div class="container px-5">
             <div class="text-center mb-5">
-                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">My Skills</span></h2>
-                <p class="lead text-muted">Technologies I work with</p>
+                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">{% trans "My Skills" %}</span></h2>
+                <p class="lead text-muted">{% trans "Technologies I work with" %}</p>
             </div>
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-8">
@@ -116,10 +116,10 @@
             <div class="row gx-5 justify-content-center">
                 <div class="col-xxl-8">
                     <div class="text-center my-5 glass-panel p-4 p-md-5">
-                        <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
-                        <p class="lead fw-light mb-4">{% if site_profile and site_profile.location %}I'm a passionate web developer based in {{ site_profile.location }}{% else %}Lorem ipsum dolor sit amet, consectetur adipiscing elit.{% endif %}</p>
-                        <p class="text-muted mb-4">{% if site_profile and site_profile.about_me %}{{ site_profile.about_me }}{% else %}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada.{% endif %}</p>
-                        <p class="text-muted mb-4">I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to work together or just want to say hi!</p>
+                        <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">{% trans "About Me" %}</span></h2>
+                        <p class="lead fw-light mb-4">{% if site_profile and site_profile.location %}{% blocktrans with location=site_profile.location %}I'm a passionate web developer based in {{ location }}{% endblocktrans %}{% else %}{% trans "Lorem ipsum dolor sit amet, consectetur adipiscing elit." %}{% endif %}</p>
+                        <p class="text-muted mb-4">{% if site_profile and site_profile.about_me %}{{ site_profile.about_me }}{% else %}{% trans "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada." %}{% endif %}</p>
+                        <p class="text-muted mb-4">{% trans "I'm always open to new opportunities and collaborations. Feel free to reach out if you'd like to work together or just want to say hi!" %}</p>
                         <div class="d-flex justify-content-center fs-2 gap-4">
                             {% if site_profile and site_profile.github_url %}
                             <a class="text-gradient" href="{{ site_profile.github_url }}" target="_blank"><i class="bi bi-github"></i></a>
@@ -144,9 +144,9 @@
     <section class="py-5 bg-light">
         <div class="container px-5">
             <div class="text-center">
-                <h2 class="display-5 fw-bolder mb-3">Let's Work Together</h2>
-                <p class="lead text-muted mb-4">Have a project in mind? I'd love to hear about it!</p>
-                <a class="btn btn-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">Get In Touch</a>
+                <h2 class="display-5 fw-bolder mb-3">{% trans "Let's Work Together" %}</h2>
+                <p class="lead text-muted mb-4">{% trans "Have a project in mind? I'd love to hear about it!" %}</p>
+                <a class="btn btn-primary btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">{% trans "Get In Touch" %}</a>
             </div>
         </div>
     </section>

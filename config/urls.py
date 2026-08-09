@@ -26,6 +26,7 @@ admin.site.index_title = 'Site Management'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('', include('hero.urls')),
     path('api/', include('hero.api.urls')),
 ]

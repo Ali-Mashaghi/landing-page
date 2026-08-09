@@ -13,3 +13,8 @@
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
+html[lang="fa"] body,
+body.lang-fa {
+    font-family: 'Vazirmatn', 'Plus Jakarta Sans', sans-serif;
+}

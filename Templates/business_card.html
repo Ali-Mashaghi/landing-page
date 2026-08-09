@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Business Card — {% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans "Business Card" %} — {% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}{% endblock %}
 {% block body_class %}business-card-body d-flex flex-column min-vh-100{% endblock %}
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -11,13 +11,13 @@
     <canvas class="bc-background" id="businessCardBackground" aria-hidden="true"></canvas>
     <div class="bc-content">
         <header class="bc-heading">
-            <span class="bc-kicker">// Digital Business Card</span>
-            <h1>Business Card</h1>
-            <p>Tap the card to flip it and use the links below to connect.</p>
+            <span class="bc-kicker">// {% trans "Digital Business Card" %}</span>
+            <h1>{% trans "Business Card" %}</h1>
+            <p>{% trans "Tap the card to flip it and use the links below to connect." %}</p>
         </header>
 
         <div class="bc-scene">
-            <div class="bc-card" id="businessCard" role="button" tabindex="0" aria-label="Flip business card">
+            <div class="bc-card" id="businessCard" role="button" tabindex="0" aria-label="{% trans 'Flip business card' %}">
                 <article class="bc-face bc-front">
                     <svg class="bc-circuit" viewBox="0 0 560 320" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                         <path d="M0 80h70v45h95V92h55" stroke="#35F28B"/>
@@ -35,7 +35,7 @@
                             <div class="bc-logo">
                                 {% if site_profile %}{{ site_profile.first_name|first }}{{ site_profile.last_name|first }}{% else %}BC{% endif %}
                             </div>
-                            <span class="bc-logo-subtitle">Digital Card</span>
+                            <span class="bc-logo-subtitle">{% trans "Digital Card" %}</span>
                         </div>
                         <div class="bc-chip" aria-hidden="true"></div>
                     </div>
@@ -43,7 +43,7 @@
                     <div class="bc-main">
                         <div class="bc-name">{% if site_profile %}{{ site_profile.full_name }}{% else %}Lorem Ipsum{% endif %}</div>
                         <div class="bc-title">
-                            {% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}Professional Title{% endif %}
+                            {% if site_profile and site_profile.title %}{{ site_profile.title }}{% else %}{% trans "Professional Title" %}{% endif %}
                         </div>
                         {% if site_profile and site_profile.tagline %}
                             <div class="bc-tagline">{{ site_profile.tagline }}</div>
@@ -69,7 +69,7 @@
                                 <span>{{ request.get_host }}</span>
                             </div>
                         </div>
-                        <span class="bc-flip-hint">Flip →</span>
+                        <span class="bc-flip-hint">{% if LANGUAGE_CODE == 'fa' %}{% trans "Flip" %} ←{% else %}{% trans "Flip" %} →{% endif %}</span>
                     </div>
                 </article>
 
