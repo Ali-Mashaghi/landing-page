@@ -16,6 +16,14 @@ from hero.services.google_auth import (
     get_or_create_user_from_google,
     verify_google_id_token,
 )
+from hero.services.portfolio_cache import (
+    PROFILE_KEY,
+    PROJECTS_KEY,
+    SKILLS_KEY,
+    get_json,
+    invalidate_portfolio,
+    set_json,
+)
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
     ContactSerializer,
@@ -132,12 +140,32 @@ class ProjectListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
     parser_classes = [JSONParser, FormParser, MultiPartParser]
 
+    def list(self, request, *args, **kwargs):
+        cached = get_json(PROJECTS_KEY)
+        if cached is not None:
+            return Response(cached)
+        response = super().list(request, *args, **kwargs)
+        set_json(PROJECTS_KEY, response.data)
+        return response
+
+    def perform_create(self, serializer):
+        serializer.save()
+        invalidate_portfolio()
+
 
 class ProjectDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAdminOrReadOnly]
     parser_classes = [JSONParser, FormParser, MultiPartParser]
+
+    def perform_update(self, serializer):
+        serializer.save()
+        invalidate_portfolio()
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        invalidate_portfolio()
 
 
 class SkillListCreateAPIView(generics.ListCreateAPIView):
@@ -150,8 +178,22 @@ class SkillListCreateAPIView(generics.ListCreateAPIView):
             return queryset
         return queryset.filter(user__is_active=True, user__is_staff=True)
 
+    def list(self, request, *args, **kwargs):
+        use_cache = not (
+            request.user.is_authenticated and request.user.is_staff
+        )
+        if use_cache:
+            cached = get_json(SKILLS_KEY)
+            if cached is not None:
+                return Response(cached)
+        response = super().list(request, *args, **kwargs)
+        if use_cache:
+            set_json(SKILLS_KEY, response.data)
+        return response
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        invalidate_portfolio()
 
 
 class SkillDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -163,6 +205,14 @@ class SkillDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.user.is_authenticated and self.request.user.is_staff:
             return queryset
         return queryset.filter(user__is_active=True, user__is_staff=True)
+
+    def perform_update(self, serializer):
+        serializer.save()
+        invalidate_portfolio()
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        invalidate_portfolio()
 
 
 class ProfileAPIView(generics.RetrieveUpdateAPIView):
@@ -182,3 +232,15 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
         if profile is None:
             raise Http404
         return profile
+
+    def retrieve(self, request, *args, **kwargs):
+        cached = get_json(PROFILE_KEY)
+        if cached is not None:
+            return Response(cached)
+        response = super().retrieve(request, *args, **kwargs)
+        set_json(PROFILE_KEY, response.data)
+        return response
+
+    def perform_update(self, serializer):
+        serializer.save()
+        invalidate_portfolio()
