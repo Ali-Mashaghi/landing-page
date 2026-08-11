@@ -72,8 +72,8 @@ class PublicAPITests(APITestCase):
             (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN),
         )
 
-    @patch('hero.api.views.send_contact_emails')
-    def test_contact_can_be_submitted_publicly_but_list_is_private(self, send_emails):
+    @patch('hero.api.views.send_contact_emails_task.delay')
+    def test_contact_can_be_submitted_publicly_but_list_is_private(self, enqueue_email):
         payload = {
             'name': 'Visitor',
             'email': 'visitor@example.com',
@@ -86,15 +86,15 @@ class PublicAPITests(APITestCase):
 
         self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(create_response.data['success'])
-        self.assertTrue(Contact.objects.filter(email='visitor@example.com').exists())
-        send_emails.assert_called_once()
+        contact = Contact.objects.get(email='visitor@example.com')
+        enqueue_email.assert_called_once_with(contact.pk)
         self.assertIn(
             list_response.status_code,
             (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN),
         )
 
-    @patch('hero.api.views.send_contact_emails', side_effect=OSError('SMTP unavailable'))
-    def test_contact_reports_email_delivery_failure(self, send_emails):
+    @patch('hero.api.views.send_contact_emails_task.delay')
+    def test_contact_enqueues_email_task_and_returns_created(self, enqueue_email):
         response = self.client.post(
             reverse('contact_list_api'),
             {
@@ -106,10 +106,10 @@ class PublicAPITests(APITestCase):
             format='json',
         )
 
-        self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE)
-        self.assertFalse(response.data['success'])
-        self.assertTrue(Contact.objects.filter(email='visitor@example.com').exists())
-        send_emails.assert_called_once()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.data['success'])
+        contact = Contact.objects.get(email='visitor@example.com')
+        enqueue_email.assert_called_once_with(contact.pk)
 
     def test_staff_can_manage_projects_and_update_profile_skills(self):
         self.client.force_authenticate(self.admin)

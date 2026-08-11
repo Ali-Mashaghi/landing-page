@@ -14,6 +14,9 @@ media/
 
 # Environment & secrets
 .env
+.env.production
+.env.deployment
+.env.local
 envs.txt
 
 # Git & IDE

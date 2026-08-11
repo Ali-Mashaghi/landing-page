@@ -13,12 +13,12 @@ from functools import wraps
 
 from .models import Project, Contact, User
 from .forms import ContactForm, LoginForm, ProfileForm, ProjectForm, SignupForm
-from .services.email import send_contact_emails
 from .services.google_auth import (
     GoogleAuthError,
     get_or_create_user_from_google,
     verify_google_id_token,
 )
+from .tasks import send_contact_emails_task
 
 
 def staff_required(view_func):
@@ -51,15 +51,8 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             contact_message = form.save()
-            try:
-                send_contact_emails(contact_message)
-            except Exception:
-                messages.warning(
-                    request,
-                    'Your message was saved, but email delivery failed. Please try again later.',
-                )
-            else:
-                messages.success(request, 'Your message has been sent successfully.')
+            send_contact_emails_task.delay(contact_message.pk)
+            messages.success(request, 'Your message has been sent successfully.')
             return redirect('contact')
     else:
         form = ContactForm()

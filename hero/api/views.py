@@ -12,7 +12,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext as _
 
 from hero.models import Contact, Project, Skill, User
-from hero.services.email import send_contact_emails
 from hero.services.google_auth import (
     GoogleAuthError,
     get_or_create_user_from_google,
@@ -26,6 +25,7 @@ from hero.services.portfolio_cache import (
     invalidate_portfolio,
     set_json,
 )
+from hero.tasks import send_contact_emails_task
 from .permissions import IsAdminOrReadOnly
 from .serializers import (
     ContactSerializer,
@@ -106,20 +106,7 @@ class ContactListCreateAPIView(generics.ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         contact = serializer.save()
-        try:
-            send_contact_emails(contact)
-        except Exception:
-            return Response(
-                {
-                    'success': False,
-                    'message': _(
-                        'Your message was saved, but email delivery failed. '
-                        'Please try again later.'
-                    ),
-                    'contact_id': contact.pk,
-                },
-                status=status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
+        send_contact_emails_task.delay(contact.pk)
         return Response(
             {
                 'success': True,
